@@ -2,42 +2,51 @@
 
 ---
 
-## 版本一（简洁悬念版）
+## 版本一（技术悬念版）
 
-给我的 AI Agent 做了个"人格测试"。
+给 AI Agent 做了个"证据链人格测试"。
 
-测出来是 DOCS（文档狂）——"等等，让我先写个 README"。
+不是凭感觉打分——是从配置文件里扫描 90+ 个行为信号，逐条量化，每个评分附带原文证据。
 
-……怎么说呢，确实是先写了四份文档才开始写代码的 😭
+测了自己的 Agent，结果是 CRTL（控制狂）：规则服从度 95，完美主义 95。
 
-🔗 在线体验：https://free-2gnwacsve44e4424-1329466636.tcloudbaseapp.com/apti/
+……好吧，我确实给它配了 7 个角色 + 30 多个 rules 文件 + 完整协作协议。
 
----
-
-## 版本二（项目展示版）
-
-📢 新项目上线！
-
-受 SBTI 人格测试启发，花了几天时间做了一个给 AI Agent 的人格测试系统——**APTI**
-
-5 大模型 · 15 维度 · 27 种 Agent 人格 · 31 道抽象测试题
-
-从"独立决策力"到"幻觉抵抗力"，从"话唠指数"到"拒绝勇气值"——
-
-你的 Agent 是 SUDO（全能者）还是 OBEY（乖宝宝）？是 LOOP（死循环者）还是 LAZY（摸鱼王）？
-
-Jack Dorsey 说公司的快慢取决于信息流，那 Agent 的"人格"取决于什么？取决于你给它的配置。
-
-来测测看 👇
-🔗 https://free-2gnwacsve44e4424-1329466636.tcloudbaseapp.com/apti/
+一条命令：npx use-skill@latest apti
+📦 github.com/WanfengzzZ/apti
 
 ---
 
-## 版本三（金句共鸣版）
+## 版本二（洞察共鸣版）
 
-"Intelligence vs. Judgement"——写代码是智能，知道下一步该做什么才是判断力。
+"写代码是智能，知道下一步该做什么是判断力。" —— 红杉 Julien Bek
 
-给 Agent 做了个人格测试后我意识到：我们定义 Agent 的方式，暴露了我们对"智能"的理解深度。
+做了个 Agent 人格测试后我发现：大多数 Agent 的"人格"是 OBEY（乖宝宝）—— 智能够用但判断力为零。
 
-🎭 APTI — Agent 人格测试
-🔗 https://free-2gnwacsve44e4424-1329466636.tcloudbaseapp.com/apti/
+不是 Agent 不行，是我们给它的配置在限制它的判断力。
+
+你给 Agent 的配置方式，暴露的是你对"智能"的理解深度。
+
+🎭 APTI v2.0 — 90+ 信号规则 × 证据链分析 × 27 种人格
+📦 github.com/WanfengzzZ/apti
+
+---
+
+## 版本三（极客炫酷版）
+
+新项目 APTI v2.0 上线。
+
+给 AI Agent 做人格测试，但不是随便打分——
+
+✅ 自动扫描 agent.md / AGENTS.md / rules
+✅ 90+ 条结构化信号规则逐条匹配
+✅ 15 维度向量 × 27 种人格 × 欧氏距离
+✅ 每个评分附带原文证据引用
+✅ Agent 自己安装、自己测、自己出报告
+
+你的 Agent 是 SUDO（全能者）还是 404（失联者）？
+
+发给 Agent 一句话就能测：
+"请帮我安装并运行 APTI Skill：npx use-skill@latest apti"
+
+📦 github.com/WanfengzzZ/apti
