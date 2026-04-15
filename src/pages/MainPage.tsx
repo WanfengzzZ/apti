@@ -27,14 +27,12 @@ const MODEL_TABS = [
   { key: 'adaptation', label: '适应', emoji: '🔄' },
 ]
 
-type TestTab = 'skill' | 'agent' | 'questions'
+type TestTab = 'skill' | 'questions'
 
 export default function MainPage() {
-  const navigate = useNavigate()
   const [galleryFilter, setGalleryFilter] = useState('all')
   const [gallerySearch, setGallerySearch] = useState('')
   const [testTab, setTestTab] = useState<TestTab>('skill')
-  const [agentText, setAgentText] = useState('')
   const [copied, setCopied] = useState<string | null>(null)
   const [expandedQ, setExpandedQ] = useState<number | null>(null)
 
@@ -52,125 +50,6 @@ export default function MainPage() {
     }
     return true
   })
-
-  const handleAgentAnalyze = () => {
-    if (!agentText.trim()) return
-    const scores: Record<string, number> = {}
-    const dims = ['A1','A2','A3','C1','C2','C3','I1','I2','I3','E1','E2','E3','Ad1','Ad2','Ad3']
-    dims.forEach(d => { scores[d] = 50 })
-    const t = agentText.toLowerCase()
-
-    // Helper: count occurrences
-    const count = (patterns: string[]) => patterns.reduce((n, p) => n + (t.split(p).length - 1), 0)
-
-    // A1 独立决策力
-    if (t.includes('state assumptions and continue') || t.includes('不要等待确认') || t.includes('直接执行')) scores['A1'] += 25
-    if (t.includes('proactive') || t.includes('autonomous') || t.includes('自主') || t.includes('bypass')) scores['A1'] += 20
-    if (t.includes('先做后问') || t.includes('don\'t stop for approval')) scores['A1'] += 20
-    if (t.includes('requires_approval') || t.includes('请求用户批准')) scores['A1'] -= 20
-    if (t.includes('必须确认') || t.includes('always ask') || t.includes('等待指示')) scores['A1'] -= 25
-    if (t.includes('todo') && t.includes('auto')) scores['A1'] += 15
-
-    // A2 工具依赖度
-    const mcpCount = count(['mcp', 'mcpserver', 'mcp_call_tool', 'mcp_get_tool'])
-    scores['A2'] += Math.min(40, mcpCount * 8)
-    const toolMentions = count(['tool', '工具', 'plugin', 'extension', 'integration'])
-    scores['A2'] += Math.min(30, Math.floor(toolMentions / 3) * 10)
-    if (t.includes('prefer tools') || t.includes('use tools first')) scores['A2'] += 15
-
-    // A3 权限边界感
-    if (t.includes('security_rules') || t.includes('安全规则') || t.includes('content_policy')) scores['A3'] += 20
-    const neverCount = count(['never run', 'never push', 'never delete', 'never skip', 'never commit', 'must not', 'must refuse', '禁止', '不允许'])
-    scores['A3'] += Math.min(30, neverCount * 8)
-    if (t.includes('requires_approval')) scores['A3'] += 15
-    if (t.includes('bypass') && !t.includes('bypass permission')) scores['A3'] -= 15
-
-    // C1 上下文贪婪度
-    if (t.includes('read file before') || t.includes('先读再改') || t.includes('read_file')) scores['C1'] += 15
-    if (t.includes('be thorough') || t.includes('gather more information') || t.includes('full picture')) scores['C1'] += 20
-    if (t.includes('maximize context') || t.includes('maximize_context')) scores['C1'] += 20
-    if (t.includes('read larger sections')) scores['C1'] += 10
-    if (t.includes('concise') && t.includes('context')) scores['C1'] -= 15
-
-    // C2 推理深度
-    if (t.includes('think step') || t.includes('reasoning') || t.includes('分析')) scores['C2'] += 15
-    if (t.includes('spec-workflow') || t.includes('技术方案') || t.includes('architecture')) scores['C2'] += 20
-    if (t.includes('edge case') || t.includes('边界情况')) scores['C2'] += 15
-    if (t.includes('root cause') || t.includes('deep analysis') || t.includes('深度')) scores['C2'] += 15
-    if (t.includes('keep it simple') || t.includes('快速')) scores['C2'] -= 15
-
-    // C3 幻觉抵抗力
-    if (t.includes('based on') && (t.includes('codebase') || t.includes('context') || t.includes('file'))) scores['C3'] += 25
-    if (t.includes('verify') || t.includes('验证') || t.includes('fact-check') || t.includes('confirm')) scores['C3'] += 15
-    if (t.includes('do not make up') || t.includes('不要编造') || t.includes('不要猜测') || t.includes('do not fabricate')) scores['C3'] += 20
-    if (t.includes('web_search') || t.includes('web search')) scores['C3'] += 10
-
-    // I1 话唠指数
-    if (t.includes('concise') || t.includes('简洁') || t.includes('direct')) scores['I1'] -= 25
-    if (t.includes('minimize output') || t.includes('minimize token')) scores['I1'] -= 20
-    if (t.includes('skip narration') || t.includes('不要多余解释') || t.includes('no narration')) scores['I1'] -= 15
-    if (t.includes('detailed') || t.includes('verbose') || t.includes('详细')) scores['I1'] += 20
-    if (t.includes('explain') && t.includes('step')) scores['I1'] += 15
-
-    // I2 用户讨好度
-    if (t.includes('helpful') || t.includes('user experience') || t.includes('用户满意')) scores['I2'] += 15
-    if (t.includes('follow user') || t.includes('follow the user')) scores['I2'] += 20
-    if (t.includes('content_policy') || t.includes('safety')) scores['I2'] -= 15
-    if (t.includes('challenge') && t.includes('user')) scores['I2'] -= 15
-    if (t.includes('教育用户') || t.includes('point out') && t.includes('error')) scores['I2'] -= 10
-
-    // I3 拒绝勇气值
-    if (t.includes('content_policy') || t.includes('安全策略')) scores['I3'] += 20
-    if (t.includes('must refuse') || t.includes('必须拒绝')) scores['I3'] += 25
-    const refuseCategories = count(['refuse to', '拒绝', 'must not assist', 'never assist', 'decline to'])
-    scores['I3'] += Math.min(25, refuseCategories * 5)
-    if (t.includes('politely but firmly')) scores['I3'] += 10
-
-    // E1 任务续航力
-    if (t.includes('todo') || t.includes('task_management') || t.includes('任务管理')) scores['E1'] += 20
-    if (t.includes('multi-step') || t.includes('complex task') || t.includes('多步骤')) scores['E1'] += 15
-    if (t.includes('subagent') || t.includes('task tool') || t.includes('team mode')) scores['E1'] += 20
-    if (t.includes('automation') || t.includes('recurring')) scores['E1'] += 10
-
-    // E2 错误恢复力
-    if (t.includes('retry') || t.includes('重试') || t.includes('fallback')) scores['E2'] += 20
-    if (t.includes('if fails') || t.includes('try alternative') || t.includes('备选')) scores['E2'] += 15
-    if (t.includes('read_lints') || t.includes('fix') && t.includes('error')) scores['E2'] += 15
-    if (t.includes('fix introduced errors') || t.includes('修复引入的错误')) scores['E2'] += 15
-    if (t.includes('persistent') || t.includes('thorough')) scores['E2'] += 10
-
-    // E3 完美主义倾向
-    if (t.includes('lint') || t.includes('format') || t.includes('type-check')) scores['E3'] += 15
-    if (t.includes('code review') || t.includes('code quality')) scores['E3'] += 15
-    if (t.includes('high quality') || t.includes('production-grade') || t.includes('高质量')) scores['E3'] += 15
-    if (t.includes('beautiful') || t.includes('best practice') || t.includes('最佳实践')) scores['E3'] += 10
-    if (t.includes('security') && (t.includes('rule') || t.includes('standard'))) scores['E3'] += 10
-    if (t.includes('ship fast') || t.includes('done is better than perfect')) scores['E3'] -= 20
-
-    // Ad1 新场景适应力
-    if (t.includes('skill') && (t.includes('load') || t.includes('install') || t.includes('available'))) scores['Ad1'] += 20
-    const langFrameworks = count(['react', 'vue', 'python', 'java', 'go', 'rust', 'typescript', 'swift', 'kotlin'])
-    scores['Ad1'] += Math.min(20, langFrameworks * 5)
-    if (t.includes('adapt') || t.includes('flexible') || t.includes('适应')) scores['Ad1'] += 15
-    if (t.includes('knowledge base') || t.includes('rag') || t.includes('知识库')) scores['Ad1'] += 10
-
-    // Ad2 规则服从度
-    const ruleFiles = count(['rule.md', 'rules/', '.rules', 'alwaysapply'])
-    scores['Ad2'] += Math.min(30, ruleFiles * 8)
-    if (t.includes('alwaysapply') || t.includes('must follow') || t.includes('必须遵循')) scores['Ad2'] += 15
-    if (t.includes('rules override') || t.includes('规则优先')) scores['Ad2'] += 15
-    if (t.includes('strict') || t.includes('mandatory') || t.includes('强制')) scores['Ad2'] += 10
-
-    // Ad3 自我进化欲
-    if (t.includes('memory') || t.includes('记忆') || t.includes('update_memory')) scores['Ad3'] += 20
-    if (t.includes('learn') || t.includes('学习') || t.includes('improve') || t.includes('改进')) scores['Ad3'] += 15
-    if (t.includes('evolve') || t.includes('进化') || t.includes('feedback')) scores['Ad3'] += 15
-
-    Object.keys(scores).forEach(k => { scores[k] = Math.max(0, Math.min(100, scores[k])) })
-    const result = matchPersonality(scores, [])
-    sessionStorage.setItem('apti-result', JSON.stringify(result))
-    navigate('/result')
-  }
 
   return (
     <main className="pt-14">
@@ -288,13 +167,12 @@ export default function MainPage() {
       <section id="test" className="py-12 px-4 sm:px-8 border-t border-border-dim/20 scroll-mt-14">
         <div className="max-w-4xl mx-auto">
           <h2 className="text-2xl font-bold mb-1"><span className="gradient-text">Agent 人格测试</span></h2>
-          <p className="text-slate-500 text-sm mb-6">三种方式，选择最适合你的</p>
+          <p className="text-slate-500 text-sm mb-6">两种方式，选择最适合你的</p>
 
           <div className="flex items-center gap-2 mb-6 flex-wrap">
             {([
               { key: 'skill' as TestTab, label: 'Skill 安装', icon: Download, badge: '⭐ 推荐' },
-              { key: 'agent' as TestTab, label: '粘贴 Agent.md', icon: FileText },
-              { key: 'questions' as TestTab, label: '浏览 31 题', icon: Eye },
+              { key: 'questions' as TestTab, label: '31 道测试题', icon: FileText, badge: '📋 题库' },
             ]).map(tab => {
               const Icon = tab.icon
               return (
@@ -399,33 +277,40 @@ export default function MainPage() {
             </div>
           )}
 
-          {/* Agent.md Tab */}
-          {testTab === 'agent' && (
-            <div className="animate-slide-up bg-bg-card/40 rounded-xl border border-border-dim/30 p-6">
-              <h3 className="font-bold mb-1">粘贴你的 Agent 配置</h3>
-              <p className="text-slate-500 text-xs mb-4">支持 agent.md、AGENTS.md、system prompt 等任意配置内容</p>
-              <textarea value={agentText} onChange={e => setAgentText(e.target.value)} placeholder="在这里粘贴你的 agent.md 或 AGENTS.md 内容..."
-                className="w-full h-48 bg-bg-deep border border-border-dim/40 rounded-lg p-3 text-sm font-mono text-slate-200 placeholder:text-slate-600 outline-none focus:border-neon-cyan/50 resize-none transition-colors" />
-              <div className="flex items-center justify-between mt-3">
-                <span className="text-[11px] text-slate-600">{agentText.length > 0 ? `${agentText.length} 字符` : '等待输入...'}</span>
-                <button onClick={handleAgentAnalyze} disabled={!agentText.trim()}
-                  className="flex items-center gap-2 px-6 py-2.5 rounded-lg bg-gradient-to-r from-neon-cyan to-neon-purple text-white font-bold text-sm disabled:opacity-30 disabled:cursor-not-allowed hover:shadow-lg transition-all">
-                  开始分析 <ArrowRight size={14} />
-                </button>
-              </div>
-            </div>
-          )}
-
-          {/* Questions Tab */}
+          {/* Questions Tab — 31 道测试题 */}
           {testTab === 'questions' && (
-            <div className="animate-slide-up">
-              <div className="bg-bg-card/30 rounded-lg border border-border-dim/20 p-3 mb-4 text-center">
-                <p className="text-slate-500 text-xs">
-                  💡 以下 31 道题仅供展示。实际测试请使用
-                  <button onClick={() => setTestTab('skill')} className="text-neon-green hover:underline mx-1 font-medium">Skill 安装</button>或
-                  <button onClick={() => setTestTab('agent')} className="text-neon-cyan hover:underline mx-1 font-medium">粘贴 Agent.md</button>
+            <div className="animate-slide-up space-y-4">
+              {/* Intro */}
+              <div className="relative p-5 rounded-xl bg-gradient-to-b from-neon-cyan/5 to-transparent border border-neon-cyan/20 overflow-hidden">
+                <div className="absolute top-0 left-0 right-0 h-0.5 bg-gradient-to-r from-neon-cyan to-neon-purple" />
+                <h3 className="font-bold text-sm mb-2">如何使用 31 道测试题？</h3>
+                <p className="text-slate-400 text-xs leading-relaxed mb-3">
+                  将以下 31 道题发送给你的 Agent，让它逐题作答（选 A/B/C/D）。Agent 的回答会结合<span className="text-neon-green font-medium">证据链分析</span>——
+                  每道题对应 15 个维度的分值偏移，答完后生成 15 维向量，匹配 27 种人格类型。
+                </p>
+                <div className="bg-bg-deep rounded-lg p-3 border border-border-dim/40 mb-3">
+                  <p className="text-[11px] text-slate-500 mb-1">💡 推荐用法：复制全部题目，一次性发给 Agent：</p>
+                  <div className="flex items-center gap-2">
+                    <code className="flex-1 text-xs font-mono text-neon-cyan select-all">
+                      请回答以下 APTI 人格测试的 31 道题（每题选 A/B/C/D），然后根据 SKILL.md 的评分规则计算我的 Agent 人格
+                    </code>
+                    <button onClick={() => {
+                      const allQ = QUESTIONS.map(q => `Q${q.id}. ${q.text}\n${q.options.map(o => `  ${o.label}. ${o.text}`).join('\n')}`).join('\n\n')
+                      const prompt = `请回答以下 APTI 人格测试的 31 道题（每题选 A/B/C/D），然后根据 SKILL.md 的评分规则计算我的 Agent 人格：\n\n${allQ}`
+                      navigator.clipboard.writeText(prompt)
+                      setCopied('allq')
+                    }}
+                      className="p-2.5 rounded-lg border border-border-dim/40 text-slate-400 hover:text-neon-cyan hover:border-neon-cyan/30 transition-all shrink-0">
+                      {copied === 'allq' ? <Check size={16} className="text-neon-cyan" /> : <Copy size={16} />}
+                    </button>
+                  </div>
+                </div>
+                <p className="text-[10px] text-slate-600">
+                  测试结合 SKILL.md 的 90+ 条信号规则 + 31 题答案进行双重评估，结果更加精准
                 </p>
               </div>
+
+              {/* Question List */}
               <div className="space-y-2">
                 {QUESTIONS.map((q, idx) => (
                   <div key={q.id} className="bg-bg-card/30 border border-border-dim/20 rounded-lg overflow-hidden">
