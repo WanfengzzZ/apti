@@ -6,9 +6,9 @@
   --color-neon-green: #00FF88;
   --color-neon-cyan: #00D4FF;
   --color-neon-purple: #A855F7;
-  --color-bg-deep: #0A0E17;
-  --color-bg-dark: #111827;
-  --color-bg-card: #1A1F2E;
+  --color-bg-deep: #000000;
+  --color-bg-dark: #0a0a0a;
+  --color-bg-card: #111111;
   --border: 220 13% 20%;
   --card: 220 20% 10%;
   --card-foreground: 210 40% 98%;
@@ -65,10 +65,10 @@ code, .font-mono {
 
 /* Glass effect */
 .glass {
-  background: rgba(10, 14, 23, 0.85);
+  background: rgba(0, 0, 0, 0.85);
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
-  border-bottom: 1px solid rgba(42, 48, 64, 0.4);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
 }
 
 /* Card hover animation */
