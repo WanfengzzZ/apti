@@ -22,7 +22,7 @@ export default function TestPage() {
   }, [searchParams])
 
   const copySkillCommand = () => {
-    navigator.clipboard.writeText('npx use-skill@latest apti')
+    navigator.clipboard.writeText('npx -y skills add WanfengzzZ/apti')
     setCopied(true)
     setTimeout(() => setCopied(false), 2000)
   }
@@ -124,7 +124,7 @@ export default function TestPage() {
                   </div>
                   <div className="flex items-center gap-2">
                     <code className="flex-1 bg-bg-deep rounded-lg p-4 text-sm font-mono text-neon-green border border-border-dim/50">
-                      npx use-skill@latest apti
+                      npx -y skills add WanfengzzZ/apti
                     </code>
                     <button
                       onClick={copySkillCommand}

@@ -12,7 +12,7 @@
 
 ……好吧，我确实给它配了 7 个角色 + 30 多个 rules 文件 + 完整协作协议。
 
-一条命令：npx use-skill@latest apti
+一条命令：npx -y skills add WanfengzzZ/apti
 📦 github.com/WanfengzzZ/apti
 
 ---
@@ -47,6 +47,6 @@
 你的 Agent 是 SUDO（全能者）还是 404（失联者）？
 
 发给 Agent 一句话就能测：
-"请帮我安装并运行 APTI Skill：npx use-skill@latest apti"
+"帮我安装 APTI Skill 并测试我的 Agent 人格：npx -y skills add WanfengzzZ/apti"
 
 📦 github.com/WanfengzzZ/apti

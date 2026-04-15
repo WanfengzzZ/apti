@@ -54,7 +54,7 @@
 ### 一条命令就能测
 
 ```
-请帮我安装并运行 APTI Skill 来测试你的 Agent 人格：npx use-skill@latest apti
+npx -y skills add WanfengzzZ/apti
 ```
 
 把这句话发给你的 Agent，它自己就开始测了 ⚡

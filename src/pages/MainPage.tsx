@@ -322,9 +322,9 @@ export default function MainPage() {
                 <p className="text-slate-400 text-xs mb-3">直接告诉你的 Agent 运行以下指令：</p>
                 <div className="flex items-center gap-2">
                   <code className="flex-1 bg-bg-deep rounded-lg p-3 text-xs font-mono text-neon-green border border-border-dim/40 select-all">
-                    请帮我安装并运行 APTI Skill 来测试你的 Agent 人格：npx use-skill@latest apti
+                    npx -y skills add WanfengzzZ/apti
                   </code>
-                  <button onClick={() => copyText('请帮我安装并运行 APTI Skill 来测试你的 Agent 人格：npx use-skill@latest apti', 'a')}
+                  <button onClick={() => copyText('npx -y skills add WanfengzzZ/apti', 'a')}
                     className="p-2.5 rounded-lg border border-border-dim/40 text-slate-400 hover:text-neon-green hover:border-neon-green/30 transition-all shrink-0">
                     {copied === 'a' ? <Check size={16} className="text-neon-green" /> : <Copy size={16} />}
                   </button>
