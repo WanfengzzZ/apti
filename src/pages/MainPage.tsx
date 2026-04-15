@@ -6,6 +6,10 @@ import {
   ExternalLink, Search, Github, Heart, Bot
 } from 'lucide-react'
 
+import { SplineScene } from '@/components/ui/splite'
+import { Card } from '@/components/ui/card'
+import { Spotlight } from '@/components/ui/spotlight'
+
 const GITHUB_URL = 'https://github.com/WanfengzzZ/apti'
 
 const MODELS = [
@@ -53,68 +57,77 @@ export default function MainPage() {
     <main className="pt-14">
 
       {/* ══════ HERO ══════ */}
-      <section id="hero" className="relative min-h-[85vh] flex items-center overflow-hidden px-4 sm:px-8">
-        <div className="absolute inset-0 opacity-[0.02]" style={{
-          backgroundImage: `linear-gradient(rgba(0,255,136,0.5) 1px, transparent 1px), linear-gradient(90deg, rgba(0,255,136,0.5) 1px, transparent 1px)`,
-          backgroundSize: '50px 50px',
-        }} />
-        <div className="absolute top-1/3 left-1/4 w-80 h-80 bg-neon-green/5 rounded-full blur-[100px]" />
-        <div className="absolute bottom-1/3 right-1/4 w-80 h-80 bg-neon-purple/5 rounded-full blur-[100px]" />
+      <section id="hero" className="px-4 sm:px-8 pt-4 scroll-mt-14">
+        <Card className="w-full min-h-[80vh] bg-black/[0.96] relative overflow-hidden border-border-dim/30">
+          <Spotlight
+            className="-top-40 left-0 md:left-60 md:-top-20"
+            fill="white"
+          />
 
-        <div className="relative z-10 max-w-6xl mx-auto w-full grid grid-cols-1 lg:grid-cols-5 gap-8 items-center">
-          {/* Left */}
-          <div className="lg:col-span-3">
-            <div className="inline-flex items-center gap-2 mb-4 px-3 py-1 rounded-full border border-neon-green/20 bg-neon-green/5 text-xs">
-              <span className="w-1.5 h-1.5 rounded-full bg-neon-green animate-pulse" />
-              <span className="text-neon-green font-mono">v1.0 · Inspired by SBTI</span>
-            </div>
-            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold leading-tight mb-4">
-              <span className="text-slate-100">你的 Agent</span><br />
-              <span className="gradient-text">是什么人格？</span>
-            </h1>
-            <p className="text-slate-400 mb-6 max-w-lg leading-relaxed">
-              <span className="font-mono text-neon-green font-bold">APTI</span> — Agent Personality Type Indicator
-              <br />
-              <span className="text-sm text-slate-500">5 大模型 × 15 维度 × 27 种人格 × 31 道抽象题</span>
-            </p>
-            <div className="flex flex-wrap gap-3">
-              <a href="#test" className="group flex items-center gap-2 px-6 py-3 rounded-xl bg-gradient-to-r from-neon-green to-neon-cyan text-bg-deep font-bold hover:shadow-lg hover:shadow-neon-green/25 transition-all hover:scale-105">
-                <Download size={18} /> 获取 Skill
-              </a>
-              <a href="#gallery" className="flex items-center gap-2 px-6 py-3 rounded-xl border border-border-dim/50 text-slate-300 hover:bg-white/5 transition-all">
-                <Eye size={18} /> 人格图鉴
-              </a>
-            </div>
-          </div>
+          <div className="flex flex-col lg:flex-row h-full min-h-[80vh]">
+            {/* Left content */}
+            <div className="flex-1 p-8 sm:p-12 relative z-10 flex flex-col justify-center">
+              <div className="inline-flex items-center gap-2 mb-6 px-3 py-1 rounded-full border border-neutral-700 bg-neutral-900/50 text-xs w-fit">
+                <span className="w-1.5 h-1.5 rounded-full bg-neon-green animate-pulse" />
+                <span className="text-neutral-400 font-mono">v3.0 · Triple Assessment</span>
+              </div>
 
-          {/* Right: Stats + Models */}
-          <div className="lg:col-span-2 space-y-4">
-            <div className="grid grid-cols-3 gap-2">
-              {[
-                { v: '5', l: '模型', c: 'text-neon-green', icon: Brain },
-                { v: '15', l: '维度', c: 'text-neon-cyan', icon: Target },
-                { v: '27', l: '人格', c: 'text-neon-purple', icon: Zap },
-              ].map(s => {
-                const Icon = s.icon
-                return (
-                  <div key={s.l} className="text-center p-3 rounded-xl bg-bg-card/40 border border-border-dim/30">
-                    <Icon size={16} className={`mx-auto mb-1 ${s.c}`} />
+              <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold bg-clip-text text-transparent bg-gradient-to-b from-neutral-50 to-neutral-400 leading-tight mb-4">
+                你的 Agent<br />是什么人格？
+              </h1>
+
+              <p className="text-neutral-400 max-w-lg leading-relaxed mb-6">
+                <span className="font-mono text-neon-green font-bold">APTI</span> — Agent Personality Type Indicator
+                <br />
+                <span className="text-sm text-neutral-500">配置分析 × 31 题自答 × 证据链 · 三重评估 · 全自动</span>
+              </p>
+
+              {/* Stats row */}
+              <div className="flex gap-6 mb-8">
+                {[
+                  { v: '5', l: '模型', c: 'text-neon-green' },
+                  { v: '15', l: '维度', c: 'text-neon-cyan' },
+                  { v: '27', l: '人格', c: 'text-neon-purple' },
+                  { v: '31', l: '题目', c: 'text-amber-400' },
+                ].map(s => (
+                  <div key={s.l} className="text-center">
                     <div className={`text-2xl font-bold font-mono ${s.c}`}>{s.v}</div>
-                    <div className="text-[10px] text-slate-500">{s.l}</div>
+                    <div className="text-[10px] text-neutral-500">{s.l}</div>
                   </div>
-                )
-              })}
+                ))}
+              </div>
+
+              <div className="flex flex-wrap gap-3">
+                <a href="#test" className="flex items-center gap-2 px-6 py-3 rounded-lg bg-white text-black font-bold hover:bg-neutral-200 transition-all">
+                  <Download size={18} /> 获取 Skill
+                </a>
+                <a href="#gallery" className="flex items-center gap-2 px-6 py-3 rounded-lg border border-neutral-700 text-neutral-300 hover:bg-white/5 transition-all">
+                  <Eye size={18} /> 人格图鉴
+                </a>
+              </div>
             </div>
-            <div className="space-y-1.5">
-              {MODELS.map(m => (
-                <div key={m.name} className="flex items-center gap-3 p-2.5 rounded-lg bg-bg-card/30 border border-border-dim/20">
-                  <span className="text-lg">{m.emoji}</span>
-                  <span className="text-sm font-bold" style={{ color: m.color }}>{m.name}</span>
-                  <span className="text-[11px] text-slate-500">{m.desc}</span>
-                </div>
-              ))}
+
+            {/* Right: 3D Scene */}
+            <div className="flex-1 relative min-h-[300px] lg:min-h-0">
+              <SplineScene 
+                scene="https://prod.spline.design/kZDDjO5HuC9GJUM2/scene.splinecode"
+                className="w-full h-full"
+              />
             </div>
           </div>
+        </Card>
+
+        {/* Models row below hero */}
+        <div className="max-w-6xl mx-auto mt-6 grid grid-cols-2 sm:grid-cols-5 gap-3">
+          {MODELS.map(m => (
+            <div key={m.name} className="flex items-center gap-2.5 p-3 rounded-lg bg-neutral-900/50 border border-neutral-800/50">
+              <span className="text-lg">{m.emoji}</span>
+              <div>
+                <div className="text-xs font-bold" style={{ color: m.color }}>{m.name}</div>
+                <div className="text-[10px] text-neutral-500">{m.desc}</div>
+              </div>
+            </div>
+          ))}
         </div>
       </section>
 

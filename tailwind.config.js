@@ -15,6 +15,14 @@ export default {
         'bg-card': '#1A1F2E',
         'bg-card-hover': '#232A3B',
         'border-dim': '#2A3040',
+        border: "hsl(var(--border))",
+        card: {
+          DEFAULT: "hsl(var(--card))",
+          foreground: "hsl(var(--card-foreground))",
+        },
+        muted: {
+          foreground: "hsl(var(--muted-foreground))",
+        },
       },
       fontFamily: {
         mono: ['"JetBrains Mono"', '"Fira Code"', 'monospace'],
@@ -24,6 +32,7 @@ export default {
         'glow-pulse': 'glow-pulse 2s ease-in-out infinite alternate',
         'float': 'float 6s ease-in-out infinite',
         'slide-up': 'slide-up 0.5s ease-out',
+        'spotlight': 'spotlight 2s ease .75s 1 forwards',
       },
       keyframes: {
         'glow-pulse': {
@@ -37,6 +46,10 @@ export default {
         'slide-up': {
           '0%': { transform: 'translateY(20px)', opacity: '0' },
           '100%': { transform: 'translateY(0)', opacity: '1' },
+        },
+        'spotlight': {
+          '0%': { opacity: '0', transform: 'translate(-72%, -62%) scale(0.5)' },
+          '100%': { opacity: '1', transform: 'translate(-50%,-40%) scale(1)' },
         },
       },
     },

@@ -9,6 +9,22 @@
   --color-bg-deep: #0A0E17;
   --color-bg-dark: #111827;
   --color-bg-card: #1A1F2E;
+  --border: 220 13% 20%;
+  --card: 220 20% 10%;
+  --card-foreground: 210 40% 98%;
+  --muted-foreground: 215 20% 65%;
+}
+
+.loader {
+  width: 24px;
+  height: 24px;
+  border: 2px solid rgba(0, 255, 136, 0.2);
+  border-top-color: #00FF88;
+  border-radius: 50%;
+  animation: spin 0.6s linear infinite;
+}
+@keyframes spin {
+  to { transform: rotate(360deg); }
 }
 
 * {
