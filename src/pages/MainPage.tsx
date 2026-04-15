@@ -3,37 +3,27 @@ import { QUESTIONS } from '../data/questions'
 import { PERSONALITIES, RARIRY_CONFIG } from '../data/personalities'
 import {
   Zap, Brain, Target, Download, FileText, Eye, Copy, Check,
-  ExternalLink, Search, Github, Heart, Bot
+  ExternalLink, Github, Heart, Bot
 } from 'lucide-react'
 
 import { SplineScene } from '@/components/ui/splite'
 import { Card } from '@/components/ui/card'
 import { Spotlight } from '@/components/ui/spotlight'
+import { CardStack } from '@/components/ui/card-stack'
 
 const GITHUB_URL = 'https://github.com/WanfengzzZ/apti'
 
 const MODELS = [
-  { emoji: '🧠', name: '自主性', desc: '独立决策·工具依赖·权限边界', color: '#00FF88' },
-  { emoji: '🔍', name: '认知风格', desc: '上下文贪婪·推理深度·幻觉抵抗', color: '#00D4FF' },
-  { emoji: '💬', name: '交互模式', desc: '话唠指数·用户讨好·拒绝勇气', color: '#A855F7' },
-  { emoji: '⚡', name: '执行力', desc: '任务续航·错误恢复·完美主义', color: '#F59E0B' },
-  { emoji: '🔄', name: '适应性', desc: '场景适应·规则服从·自我进化', color: '#EC4899' },
-]
-
-const MODEL_TABS = [
-  { key: 'all', label: '全部', emoji: '🎭' },
-  { key: 'autonomy', label: '自主性', emoji: '🧠' },
-  { key: 'cognition', label: '认知', emoji: '🔍' },
-  { key: 'interaction', label: '交互', emoji: '💬' },
-  { key: 'execution', label: '执行', emoji: '⚡' },
-  { key: 'adaptation', label: '适应', emoji: '🔄' },
+  { key: 'autonomy', emoji: '🧠', name: '自主性', desc: '独立决策·工具依赖·权限边界', color: '#00FF88' },
+  { key: 'cognition', emoji: '🔍', name: '认知风格', desc: '上下文贪婪·推理深度·幻觉抵抗', color: '#00D4FF' },
+  { key: 'interaction', emoji: '💬', name: '交互模式', desc: '话唠指数·用户讨好·拒绝勇气', color: '#A855F7' },
+  { key: 'execution', emoji: '⚡', name: '执行力', desc: '任务续航·错误恢复·完美主义', color: '#F59E0B' },
+  { key: 'adaptation', emoji: '🔄', name: '适应性', desc: '场景适应·规则服从·自我进化', color: '#EC4899' },
 ]
 
 type TestTab = 'skill' | 'questions'
 
 export default function MainPage() {
-  const [galleryFilter, setGalleryFilter] = useState('all')
-  const [gallerySearch, setGallerySearch] = useState('')
   const [testTab, setTestTab] = useState<TestTab>('skill')
   const [copied, setCopied] = useState<string | null>(null)
   const [expandedQ, setExpandedQ] = useState<number | null>(null)
@@ -43,15 +33,6 @@ export default function MainPage() {
     setCopied(key)
     setTimeout(() => setCopied(null), 2000)
   }
-
-  const filteredPersonalities = PERSONALITIES.filter(p => {
-    if (galleryFilter !== 'all' && p.dominantModel !== galleryFilter) return false
-    if (gallerySearch) {
-      const q = gallerySearch.toLowerCase()
-      return p.code.toLowerCase().includes(q) || p.name.includes(q) || p.nameEn.toLowerCase().includes(q) || p.tagline.includes(q)
-    }
-    return true
-  })
 
   return (
     <main className="pt-14">
@@ -132,45 +113,63 @@ export default function MainPage() {
       </section>
 
       {/* ══════ GALLERY ══════ */}
-      <section id="gallery" className="py-12 px-4 sm:px-8 border-t border-border-dim/20 scroll-mt-14">
-        <div className="max-w-7xl mx-auto">
-          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-6">
-            <div>
-              <h2 className="text-2xl font-bold"><span className="gradient-text">Agent 人格图鉴</span></h2>
-              <p className="text-slate-500 text-sm mt-1">27 种 Agent 人格，你的 Agent 是哪一种？</p>
-            </div>
-            <div className="relative">
-              <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-600" />
-              <input type="text" value={gallerySearch} onChange={e => setGallerySearch(e.target.value)} placeholder="搜索..."
-                className="bg-bg-card/50 border border-border-dim/40 rounded-lg pl-8 pr-3 py-1.5 text-sm text-slate-200 placeholder:text-slate-600 outline-none focus:border-neon-green/50 transition-colors w-40" />
-            </div>
+      <section id="gallery" className="py-16 px-4 sm:px-8 border-t border-white/[0.04] scroll-mt-14">
+        <div className="max-w-6xl mx-auto">
+          <div className="text-center mb-12">
+            <h2 className="text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-b from-neutral-50 to-neutral-400">Agent 人格图鉴</h2>
+            <p className="text-neutral-500 text-sm mt-2">27 种 Agent 人格，按 5 大模型分类 · 拖拽或点击切换</p>
           </div>
-          <div className="flex items-center gap-1.5 mb-6 flex-wrap">
-            {MODEL_TABS.map(tab => (
-              <button key={tab.key} onClick={() => setGalleryFilter(tab.key)}
-                className={`flex items-center gap-1 px-3 py-1.5 rounded-lg text-xs font-medium transition-all ${
-                  galleryFilter === tab.key ? 'bg-neon-green/10 text-neon-green border border-neon-green/30' : 'text-slate-500 hover:text-slate-300 hover:bg-white/5 border border-transparent'
-                }`}>
-                <span>{tab.emoji}</span><span>{tab.label}</span>
-              </button>
-            ))}
-          </div>
-          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-3">
-            {filteredPersonalities.map(p => {
-              const rCfg = RARIRY_CONFIG[p.rarity]
-              return (
-                <div key={p.code} className="relative p-4 rounded-xl bg-bg-card/40 border border-border-dim/30 card-hover overflow-hidden group">
-                  <div className="absolute top-0 left-0 right-0 h-0.5" style={{ background: `linear-gradient(90deg, ${p.color}, transparent)` }} />
-                  <div className="absolute top-2 right-2 px-1.5 py-0.5 rounded-full text-[9px] font-bold" style={{ color: rCfg.color, background: rCfg.bg }}>{rCfg.label}</div>
-                  <div className="font-mono text-xl font-bold mb-0.5" style={{ color: p.color }}>{p.code}</div>
-                  <h3 className="text-sm font-bold text-slate-200">{p.name}</h3>
-                  <p className="text-[11px] text-slate-500 italic mt-1 line-clamp-1">"{p.tagline}"</p>
-                  <p className="text-[11px] text-slate-500 mt-2 line-clamp-2 leading-relaxed opacity-0 group-hover:opacity-100 transition-opacity">{p.description}</p>
+
+          {MODELS.map(model => {
+            const modelPersonalities = PERSONALITIES.filter(p => p.dominantModel === model.key)
+            if (modelPersonalities.length === 0) return null
+            const stackItems = modelPersonalities.map(p => ({
+              id: p.code,
+              title: `${p.code} · ${p.name}`,
+              description: `"${p.tagline}" — ${p.description.slice(0, 60)}...`,
+              tag: RARIRY_CONFIG[p.rarity].label,
+              color: p.color,
+              rarity: p.rarity,
+            }))
+            return (
+              <div key={model.key} className="mb-16">
+                <div className="flex items-center gap-3 mb-2 justify-center">
+                  <span className="text-2xl">{model.emoji}</span>
+                  <h3 className="text-xl font-bold" style={{ color: model.color }}>{model.name}</h3>
+                  <span className="text-xs text-neutral-600">{model.desc}</span>
                 </div>
-              )
-            })}
-          </div>
-          {filteredPersonalities.length === 0 && <div className="text-center py-16 text-slate-600">没有匹配的人格类型</div>}
+                <CardStack
+                  items={stackItems}
+                  cardWidth={440}
+                  cardHeight={220}
+                  overlap={0.5}
+                  spreadDeg={36}
+                  autoAdvance
+                  intervalMs={3500}
+                  pauseOnHover
+                  showDots
+                  renderCard={(item, { active }) => {
+                    const p = PERSONALITIES.find(pp => pp.code === item.id)!
+                    const rCfg = RARIRY_CONFIG[p.rarity]
+                    return (
+                      <div className={`h-full w-full p-6 flex flex-col justify-between transition-all ${active ? 'bg-neutral-900' : 'bg-neutral-950'}`}
+                        style={{ borderTop: `2px solid ${p.color}` }}>
+                        <div>
+                          <div className="flex items-center justify-between mb-2">
+                            <span className="font-mono text-2xl font-bold" style={{ color: p.color }}>{p.code}</span>
+                            <span className="px-2 py-0.5 rounded-full text-[10px] font-bold" style={{ color: rCfg.color, background: rCfg.bg }}>{rCfg.label}</span>
+                          </div>
+                          <h4 className="text-lg font-bold text-white mb-1">{p.name}</h4>
+                          <p className="text-sm text-neutral-400 italic">"{p.tagline}"</p>
+                        </div>
+                        <p className="text-xs text-neutral-500 leading-relaxed line-clamp-3 mt-3">{p.description}</p>
+                      </div>
+                    )
+                  }}
+                />
+              </div>
+            )
+          })}
         </div>
       </section>
 
