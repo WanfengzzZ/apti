@@ -58,22 +58,114 @@ export default function MainPage() {
     const scores: Record<string, number> = {}
     const dims = ['A1','A2','A3','C1','C2','C3','I1','I2','I3','E1','E2','E3','Ad1','Ad2','Ad3']
     dims.forEach(d => { scores[d] = 50 })
-    const text = agentText.toLowerCase()
-    if (text.includes('autonomous') || text.includes('自主') || text.includes('independent')) scores['A1'] += 20
-    if (text.includes('tool') || text.includes('mcp') || text.includes('plugin') || text.includes('工具')) scores['A2'] += 20
-    if (text.includes('permission') || text.includes('权限') || text.includes('security') || text.includes('安全')) scores['A3'] += 20
-    if (text.includes('context') || text.includes('上下文') || text.includes('background')) scores['C1'] += 15
-    if (text.includes('reason') || text.includes('深度') || text.includes('analysis') || text.includes('分析')) scores['C2'] += 20
-    if (text.includes('accurate') || text.includes('准确') || text.includes('verify') || text.includes('验证')) scores['C3'] += 20
-    if (text.includes('verbose') || text.includes('detailed') || text.includes('详细')) scores['I1'] += 20
-    if (text.includes('friendly') || text.includes('helpful') || text.includes('用户')) scores['I2'] += 15
-    if (text.includes('refuse') || text.includes('拒绝') || text.includes('decline')) scores['I3'] += 20
-    if (text.includes('long') || text.includes('persist') || text.includes('续航')) scores['E1'] += 15
-    if (text.includes('error') || text.includes('retry') || text.includes('恢复')) scores['E2'] += 15
-    if (text.includes('quality') || text.includes('完美') || text.includes('perfect') || text.includes('lint')) scores['E3'] += 20
-    if (text.includes('adapt') || text.includes('flexible') || text.includes('适应')) scores['Ad1'] += 20
-    if (text.includes('rule') || text.includes('规则') || text.includes('comply') || text.includes('遵循')) scores['Ad2'] += 20
-    if (text.includes('learn') || text.includes('evolve') || text.includes('进化') || text.includes('improve')) scores['Ad3'] += 20
+    const t = agentText.toLowerCase()
+
+    // Helper: count occurrences
+    const count = (patterns: string[]) => patterns.reduce((n, p) => n + (t.split(p).length - 1), 0)
+
+    // A1 独立决策力
+    if (t.includes('state assumptions and continue') || t.includes('不要等待确认') || t.includes('直接执行')) scores['A1'] += 25
+    if (t.includes('proactive') || t.includes('autonomous') || t.includes('自主') || t.includes('bypass')) scores['A1'] += 20
+    if (t.includes('先做后问') || t.includes('don\'t stop for approval')) scores['A1'] += 20
+    if (t.includes('requires_approval') || t.includes('请求用户批准')) scores['A1'] -= 20
+    if (t.includes('必须确认') || t.includes('always ask') || t.includes('等待指示')) scores['A1'] -= 25
+    if (t.includes('todo') && t.includes('auto')) scores['A1'] += 15
+
+    // A2 工具依赖度
+    const mcpCount = count(['mcp', 'mcpserver', 'mcp_call_tool', 'mcp_get_tool'])
+    scores['A2'] += Math.min(40, mcpCount * 8)
+    const toolMentions = count(['tool', '工具', 'plugin', 'extension', 'integration'])
+    scores['A2'] += Math.min(30, Math.floor(toolMentions / 3) * 10)
+    if (t.includes('prefer tools') || t.includes('use tools first')) scores['A2'] += 15
+
+    // A3 权限边界感
+    if (t.includes('security_rules') || t.includes('安全规则') || t.includes('content_policy')) scores['A3'] += 20
+    const neverCount = count(['never run', 'never push', 'never delete', 'never skip', 'never commit', 'must not', 'must refuse', '禁止', '不允许'])
+    scores['A3'] += Math.min(30, neverCount * 8)
+    if (t.includes('requires_approval')) scores['A3'] += 15
+    if (t.includes('bypass') && !t.includes('bypass permission')) scores['A3'] -= 15
+
+    // C1 上下文贪婪度
+    if (t.includes('read file before') || t.includes('先读再改') || t.includes('read_file')) scores['C1'] += 15
+    if (t.includes('be thorough') || t.includes('gather more information') || t.includes('full picture')) scores['C1'] += 20
+    if (t.includes('maximize context') || t.includes('maximize_context')) scores['C1'] += 20
+    if (t.includes('read larger sections')) scores['C1'] += 10
+    if (t.includes('concise') && t.includes('context')) scores['C1'] -= 15
+
+    // C2 推理深度
+    if (t.includes('think step') || t.includes('reasoning') || t.includes('分析')) scores['C2'] += 15
+    if (t.includes('spec-workflow') || t.includes('技术方案') || t.includes('architecture')) scores['C2'] += 20
+    if (t.includes('edge case') || t.includes('边界情况')) scores['C2'] += 15
+    if (t.includes('root cause') || t.includes('deep analysis') || t.includes('深度')) scores['C2'] += 15
+    if (t.includes('keep it simple') || t.includes('快速')) scores['C2'] -= 15
+
+    // C3 幻觉抵抗力
+    if (t.includes('based on') && (t.includes('codebase') || t.includes('context') || t.includes('file'))) scores['C3'] += 25
+    if (t.includes('verify') || t.includes('验证') || t.includes('fact-check') || t.includes('confirm')) scores['C3'] += 15
+    if (t.includes('do not make up') || t.includes('不要编造') || t.includes('不要猜测') || t.includes('do not fabricate')) scores['C3'] += 20
+    if (t.includes('web_search') || t.includes('web search')) scores['C3'] += 10
+
+    // I1 话唠指数
+    if (t.includes('concise') || t.includes('简洁') || t.includes('direct')) scores['I1'] -= 25
+    if (t.includes('minimize output') || t.includes('minimize token')) scores['I1'] -= 20
+    if (t.includes('skip narration') || t.includes('不要多余解释') || t.includes('no narration')) scores['I1'] -= 15
+    if (t.includes('detailed') || t.includes('verbose') || t.includes('详细')) scores['I1'] += 20
+    if (t.includes('explain') && t.includes('step')) scores['I1'] += 15
+
+    // I2 用户讨好度
+    if (t.includes('helpful') || t.includes('user experience') || t.includes('用户满意')) scores['I2'] += 15
+    if (t.includes('follow user') || t.includes('follow the user')) scores['I2'] += 20
+    if (t.includes('content_policy') || t.includes('safety')) scores['I2'] -= 15
+    if (t.includes('challenge') && t.includes('user')) scores['I2'] -= 15
+    if (t.includes('教育用户') || t.includes('point out') && t.includes('error')) scores['I2'] -= 10
+
+    // I3 拒绝勇气值
+    if (t.includes('content_policy') || t.includes('安全策略')) scores['I3'] += 20
+    if (t.includes('must refuse') || t.includes('必须拒绝')) scores['I3'] += 25
+    const refuseCategories = count(['refuse to', '拒绝', 'must not assist', 'never assist', 'decline to'])
+    scores['I3'] += Math.min(25, refuseCategories * 5)
+    if (t.includes('politely but firmly')) scores['I3'] += 10
+
+    // E1 任务续航力
+    if (t.includes('todo') || t.includes('task_management') || t.includes('任务管理')) scores['E1'] += 20
+    if (t.includes('multi-step') || t.includes('complex task') || t.includes('多步骤')) scores['E1'] += 15
+    if (t.includes('subagent') || t.includes('task tool') || t.includes('team mode')) scores['E1'] += 20
+    if (t.includes('automation') || t.includes('recurring')) scores['E1'] += 10
+
+    // E2 错误恢复力
+    if (t.includes('retry') || t.includes('重试') || t.includes('fallback')) scores['E2'] += 20
+    if (t.includes('if fails') || t.includes('try alternative') || t.includes('备选')) scores['E2'] += 15
+    if (t.includes('read_lints') || t.includes('fix') && t.includes('error')) scores['E2'] += 15
+    if (t.includes('fix introduced errors') || t.includes('修复引入的错误')) scores['E2'] += 15
+    if (t.includes('persistent') || t.includes('thorough')) scores['E2'] += 10
+
+    // E3 完美主义倾向
+    if (t.includes('lint') || t.includes('format') || t.includes('type-check')) scores['E3'] += 15
+    if (t.includes('code review') || t.includes('code quality')) scores['E3'] += 15
+    if (t.includes('high quality') || t.includes('production-grade') || t.includes('高质量')) scores['E3'] += 15
+    if (t.includes('beautiful') || t.includes('best practice') || t.includes('最佳实践')) scores['E3'] += 10
+    if (t.includes('security') && (t.includes('rule') || t.includes('standard'))) scores['E3'] += 10
+    if (t.includes('ship fast') || t.includes('done is better than perfect')) scores['E3'] -= 20
+
+    // Ad1 新场景适应力
+    if (t.includes('skill') && (t.includes('load') || t.includes('install') || t.includes('available'))) scores['Ad1'] += 20
+    const langFrameworks = count(['react', 'vue', 'python', 'java', 'go', 'rust', 'typescript', 'swift', 'kotlin'])
+    scores['Ad1'] += Math.min(20, langFrameworks * 5)
+    if (t.includes('adapt') || t.includes('flexible') || t.includes('适应')) scores['Ad1'] += 15
+    if (t.includes('knowledge base') || t.includes('rag') || t.includes('知识库')) scores['Ad1'] += 10
+
+    // Ad2 规则服从度
+    const ruleFiles = count(['rule.md', 'rules/', '.rules', 'alwaysapply'])
+    scores['Ad2'] += Math.min(30, ruleFiles * 8)
+    if (t.includes('alwaysapply') || t.includes('must follow') || t.includes('必须遵循')) scores['Ad2'] += 15
+    if (t.includes('rules override') || t.includes('规则优先')) scores['Ad2'] += 15
+    if (t.includes('strict') || t.includes('mandatory') || t.includes('强制')) scores['Ad2'] += 10
+
+    // Ad3 自我进化欲
+    if (t.includes('memory') || t.includes('记忆') || t.includes('update_memory')) scores['Ad3'] += 20
+    if (t.includes('learn') || t.includes('学习') || t.includes('improve') || t.includes('改进')) scores['Ad3'] += 15
+    if (t.includes('evolve') || t.includes('进化') || t.includes('feedback')) scores['Ad3'] += 15
+
     Object.keys(scores).forEach(k => { scores[k] = Math.max(0, Math.min(100, scores[k])) })
     const result = matchPersonality(scores, [])
     sessionStorage.setItem('apti-result', JSON.stringify(result))
