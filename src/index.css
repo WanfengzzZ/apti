@@ -54,7 +54,7 @@ html {
 body {
   font-family: 'Space Grotesk', system-ui, -apple-system, sans-serif;
   background-color: var(--color-bg-deep);
-  color: #E4E4E7;
+  color: #F4F4F5;
   min-height: 100vh;
   overflow-x: hidden;
   -webkit-font-smoothing: antialiased;
@@ -147,6 +147,6 @@ code, .font-mono {
 
 /* Selection */
 ::selection {
-  background: rgba(0, 255, 136, 0.2);
-  color: #00FF88;
+  background: rgba(96, 165, 250, 0.25);
+  color: #DBEAFE;
 }

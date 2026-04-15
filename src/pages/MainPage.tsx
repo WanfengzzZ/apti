@@ -59,7 +59,7 @@ export default function MainPage() {
                 你的 Agent<br />是什么人格？
               </h1>
 
-              <p className="text-neutral-400 max-w-lg leading-relaxed mb-6">
+              <p className="text-neutral-300 max-w-lg leading-relaxed mb-6">
                 <span className="font-mono text-blue-400 font-bold">APTI</span> — Agent Personality Type Indicator
                 <br />
                 <span className="text-sm text-neutral-500">配置分析 × 31 题自答 × 证据链 · 三重评估 · 全自动</span>
@@ -120,7 +120,7 @@ export default function MainPage() {
           <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-10">
             <div>
               <h2 className="text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-b from-neutral-50 to-neutral-400">Agent 人格图鉴</h2>
-              <p className="text-neutral-500 text-sm mt-1">27 种 Agent 人格 · {galleryView === 'carousel' ? '点击切换' : '平铺浏览'}</p>
+              <p className="text-neutral-400 text-sm mt-1">27 种 Agent 人格 · {galleryView === 'carousel' ? '点击切换' : '平铺浏览'}</p>
             </div>
 
             <div className="flex items-center gap-3">
@@ -217,9 +217,9 @@ export default function MainPage() {
                           <span className="px-2 py-0.5 rounded-full text-[10px] font-bold" style={{ color: rCfg.color, background: rCfg.bg }}>{rCfg.label}</span>
                         </div>
                         <h4 className="text-lg font-bold text-white mb-1">{p.name}</h4>
-                        <p className="text-sm text-neutral-400 italic">"{p.tagline}"</p>
+                        <p className="text-sm text-neutral-300 italic">"{p.tagline}"</p>
                       </div>
-                      <p className="text-xs text-neutral-500 leading-relaxed line-clamp-4 mt-3">{p.description}</p>
+                      <p className="text-xs text-neutral-400 leading-relaxed line-clamp-4 mt-3">{p.description}</p>
                     </div>
                   )
                 }}
@@ -242,8 +242,8 @@ export default function MainPage() {
                         <span className="px-2 py-0.5 rounded-full text-[10px] font-bold" style={{ color: rCfg.color, background: rCfg.bg }}>{rCfg.label}</span>
                       </div>
                       <h4 className="text-base font-bold text-white mb-1">{p.name}</h4>
-                      <p className="text-xs text-neutral-400 italic mb-3">"{p.tagline}"</p>
-                      <p className="text-xs text-neutral-500 leading-relaxed line-clamp-4">{p.description}</p>
+                      <p className="text-xs text-neutral-300 italic mb-3">"{p.tagline}"</p>
+                      <p className="text-xs text-neutral-400 leading-relaxed line-clamp-4">{p.description}</p>
                     </div>
                   )
                 })}
@@ -268,7 +268,7 @@ export default function MainPage() {
             <h2 className="max-w-2xl text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-b from-neutral-50 to-neutral-400">
               Agent 人格测试
             </h2>
-            <p className="text-neutral-500 text-sm">安装 Skill 后 Agent 全自动完成：读取配置 + 自答 31 题 + 证据链分析</p>
+            <p className="text-neutral-400 text-sm">安装 Skill 后 Agent 全自动完成：读取配置 + 自答 31 题 + 证据链分析</p>
           </div>
 
           <Tabs defaultValue="skill" className="mt-6">
@@ -292,7 +292,7 @@ export default function MainPage() {
                     <div>
                       <Badge variant="outline" className="mb-3 border-blue-500/30 text-blue-400 bg-blue-500/5">⭐ NPX 命令安装</Badge>
                       <h3 className="text-2xl font-bold text-white mb-2">复制给 Agent 开始测试</h3>
-                      <p className="text-neutral-400 text-sm mb-4">让 Agent 运行以下命令，自动安装并执行测试，支持 45+ 种 Agent 环境：</p>
+                      <p className="text-neutral-300 text-sm mb-4">让 Agent 运行以下命令，自动安装并执行测试，支持 45+ 种 Agent 环境：</p>
                       <div className="flex items-center gap-2">
                         <code className="flex-1 bg-black rounded-lg p-3 text-xs font-mono text-blue-400 border border-neutral-800 select-all">
                           npx -y skills add WanfengzzZ/apti
@@ -378,7 +378,7 @@ export default function MainPage() {
                   <div className="flex flex-col gap-4">
                     <Badge variant="outline" className="w-fit border-neutral-700 text-neutral-400">📋 情境测试题</Badge>
                     <h3 className="text-2xl font-bold text-white">31 道 Agent 行为情境题</h3>
-                    <p className="text-neutral-400 text-sm leading-relaxed">
+                    <p className="text-neutral-300 text-sm leading-relaxed">
                       以下情境题由 Agent 在安装 Skill 后<span className="text-white font-medium">自动回答</span>，无需用户参与。
                       Agent 基于自身行为特性选择最"像自己"的答案，每题选项对应 15 维度的分值偏移，
                       与证据链分析<span className="text-blue-400 font-medium">加权融合（6:4）</span>后匹配人格。
@@ -425,7 +425,7 @@ export default function MainPage() {
             {/* Left: info + links */}
             <div className="flex-1">
               <div className="font-mono text-lg font-bold text-white mb-1">APTI</div>
-              <p className="text-neutral-500 text-xs mb-4">Agent Personality Type Indicator<br />5 大模型 × 15 维度 × 27 种人格</p>
+              <p className="text-neutral-400 text-xs mb-4">Agent Personality Type Indicator<br />5 大模型 × 15 维度 × 27 种人格</p>
               <div className="flex items-center gap-4 text-xs">
                 <a href={GITHUB_URL} target="_blank" rel="noopener noreferrer" className="flex items-center gap-1.5 text-neutral-500 hover:text-white transition-colors"><Github size={12} /> GitHub</a>
                 <a href="https://skillhub.cn/skills/apti-skill" target="_blank" rel="noopener noreferrer" className="flex items-center gap-1.5 text-neutral-500 hover:text-white transition-colors">📦 SkillHub</a>
