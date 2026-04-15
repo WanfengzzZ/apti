@@ -50,7 +50,7 @@ export default function MainPage() {
 
           <div className="flex flex-col lg:flex-row h-full min-h-[80vh]">
             {/* Left content */}
-            <div className="flex-1 p-8 sm:p-12 relative z-10 flex flex-col justify-center">
+            <div className="flex-1 p-8 sm:p-12 lg:pl-20 xl:pl-28 relative z-10 flex flex-col justify-center">
               <div className="inline-flex items-center gap-2 mb-6 px-3 py-1 rounded-full border border-neutral-700 bg-neutral-900/50 text-xs w-fit">
                 <span className="w-1.5 h-1.5 rounded-full bg-blue-400 animate-pulse" />
                 <span className="text-neutral-400 font-mono">v3.0 · Triple Assessment</span>
