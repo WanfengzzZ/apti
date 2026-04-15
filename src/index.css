@@ -9,10 +9,24 @@
   --color-bg-deep: #000000;
   --color-bg-dark: #0a0a0a;
   --color-bg-card: #111111;
-  --border: 220 13% 20%;
-  --card: 220 20% 10%;
-  --card-foreground: 210 40% 98%;
-  --muted-foreground: 215 20% 65%;
+  --background: 0 0% 0%;
+  --foreground: 0 0% 98%;
+  --card: 0 0% 5%;
+  --card-foreground: 0 0% 98%;
+  --muted: 0 0% 10%;
+  --muted-foreground: 0 0% 55%;
+  --accent: 0 0% 12%;
+  --accent-foreground: 0 0% 98%;
+  --primary: 152 100% 50%;
+  --primary-foreground: 0 0% 0%;
+  --secondary: 0 0% 12%;
+  --secondary-foreground: 0 0% 98%;
+  --destructive: 0 84% 60%;
+  --destructive-foreground: 0 0% 98%;
+  --border: 0 0% 12%;
+  --input: 0 0% 12%;
+  --ring: 152 100% 50%;
+  --radius: 0.5rem;
 }
 
 .loader {
@@ -33,11 +47,16 @@
   box-sizing: border-box;
 }
 
+html {
+  overflow-x: hidden;
+}
+
 body {
   font-family: 'Space Grotesk', system-ui, -apple-system, sans-serif;
   background-color: var(--color-bg-deep);
-  color: #F8FAFC;
+  color: #E4E4E7;
   min-height: 100vh;
+  overflow-x: hidden;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
