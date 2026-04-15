@@ -123,7 +123,7 @@ export default function HomePage() {
       <section className="py-20 px-4">
         <div className="max-w-5xl mx-auto">
           <h2 className="text-3xl font-bold text-center mb-2">三种使用方式</h2>
-          <p className="text-slate-500 text-center mb-12 text-sm">推荐优先级：Skill 安装 → 粘贴 Agent.md → 在线浏览题目</p>
+          <p className="text-slate-500 text-center mb-12 text-sm">推荐优先级：Skill 安装 → 粘贴 Agent.md </p>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {/* Method 1: Skill (Recommended) */}

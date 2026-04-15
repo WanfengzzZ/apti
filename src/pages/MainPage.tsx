@@ -10,15 +10,16 @@ import { SplineScene } from '@/components/ui/splite'
 import { Card } from '@/components/ui/card'
 import { Spotlight } from '@/components/ui/spotlight'
 import { CardStack } from '@/components/ui/card-stack'
+import { MODEL_ICONS, IconAutonomy, IconCognition, IconInteraction, IconExecution, IconAdaptation } from '@/components/Icons'
 
 const GITHUB_URL = 'https://github.com/WanfengzzZ/apti'
 
 const MODELS = [
-  { key: 'autonomy', emoji: '🧠', name: '自主性', desc: '独立决策·工具依赖·权限边界', color: '#00FF88' },
-  { key: 'cognition', emoji: '🔍', name: '认知风格', desc: '上下文贪婪·推理深度·幻觉抵抗', color: '#00D4FF' },
-  { key: 'interaction', emoji: '💬', name: '交互模式', desc: '话唠指数·用户讨好·拒绝勇气', color: '#A855F7' },
-  { key: 'execution', emoji: '⚡', name: '执行力', desc: '任务续航·错误恢复·完美主义', color: '#F59E0B' },
-  { key: 'adaptation', emoji: '🔄', name: '适应性', desc: '场景适应·规则服从·自我进化', color: '#EC4899' },
+  { key: 'autonomy', icon: IconAutonomy, name: '自主性', desc: '独立决策·工具依赖·权限边界', color: '#00FF88' },
+  { key: 'cognition', icon: IconCognition, name: '认知风格', desc: '上下文贪婪·推理深度·幻觉抵抗', color: '#00D4FF' },
+  { key: 'interaction', icon: IconInteraction, name: '交互模式', desc: '话唠指数·用户讨好·拒绝勇气', color: '#A855F7' },
+  { key: 'execution', icon: IconExecution, name: '执行力', desc: '任务续航·错误恢复·完美主义', color: '#F59E0B' },
+  { key: 'adaptation', icon: IconAdaptation, name: '适应性', desc: '场景适应·规则服从·自我进化', color: '#EC4899' },
 ]
 
 type TestTab = 'skill' | 'questions'
@@ -105,15 +106,18 @@ export default function MainPage() {
 
         {/* Models row below hero */}
         <div className="max-w-6xl mx-auto mt-6 grid grid-cols-2 sm:grid-cols-5 gap-3">
-          {MODELS.map(m => (
+          {MODELS.map(m => {
+            const Icon = m.icon
+            return (
             <div key={m.name} className="flex items-center gap-2.5 p-3 rounded-lg bg-neutral-900/50 border border-neutral-800/50">
-              <span className="text-lg">{m.emoji}</span>
+              <Icon size={24} color={m.color} />
               <div>
                 <div className="text-xs font-bold" style={{ color: m.color }}>{m.name}</div>
                 <div className="text-[10px] text-neutral-500">{m.desc}</div>
               </div>
             </div>
-          ))}
+            )
+          })}
         </div>
       </section>
 
@@ -124,7 +128,7 @@ export default function MainPage() {
           <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-10">
             <div>
               <h2 className="text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-b from-neutral-50 to-neutral-400">Agent 人格图鉴</h2>
-              <p className="text-neutral-500 text-sm mt-1">27 种 Agent 人格 · {galleryView === 'carousel' ? '拖拽或点击切换' : '平铺浏览'}</p>
+              <p className="text-neutral-500 text-sm mt-1">27 种 Agent 人格 · {galleryView === 'carousel' ? '点击切换' : '平铺浏览'}</p>
             </div>
 
             <div className="flex items-center gap-3">
@@ -135,7 +139,10 @@ export default function MainPage() {
                   className="flex items-center gap-2 px-4 py-2 rounded-lg border border-neutral-800 bg-neutral-900/80 text-sm text-neutral-300 hover:border-neutral-700 transition-all min-w-[140px] justify-between"
                 >
                   <span className="flex items-center gap-2">
-                    <span>{galleryModel === 'all' ? '🎭' : MODELS.find(m => m.key === galleryModel)?.emoji}</span>
+                    {galleryModel === 'all'
+                      ? <span className="text-sm">🎭</span>
+                      : (() => { const Icon = MODEL_ICONS[galleryModel]; return Icon ? <Icon size={18} color={MODELS.find(m => m.key === galleryModel)?.color} /> : null })()
+                    }
                     <span>{galleryModel === 'all' ? '全部' : MODELS.find(m => m.key === galleryModel)?.name}</span>
                   </span>
                   <ChevronDown size={14} className={`text-neutral-500 transition-transform ${dropdownOpen ? 'rotate-180' : ''}`} />
@@ -154,6 +161,7 @@ export default function MainPage() {
                       </button>
                       {MODELS.map(m => {
                         const count = PERSONALITIES.filter(p => p.dominantModel === m.key).length
+                        const Icon = m.icon
                         return (
                           <button
                             key={m.key}
@@ -162,7 +170,7 @@ export default function MainPage() {
                               galleryModel === m.key ? 'bg-white/5 text-white' : 'text-neutral-400 hover:bg-white/[0.03] hover:text-neutral-200'
                             }`}
                           >
-                            <span>{m.emoji}</span>
+                            <Icon size={18} color={galleryModel === m.key ? m.color : '#666'} />
                             <span style={{ color: galleryModel === m.key ? m.color : undefined }}>{m.name}</span>
                             <span className="ml-auto text-[10px] text-neutral-600">{count}</span>
                           </button>
@@ -230,7 +238,7 @@ export default function MainPage() {
                         <div className="flex items-center justify-between mb-2">
                           <div className="flex items-center gap-2">
                             <span className="font-mono text-2xl font-bold" style={{ color: p.color }}>{p.code}</span>
-                            {model && <span className="text-sm" title={model.name}>{model.emoji}</span>}
+                            {model && (() => { const MIcon = MODEL_ICONS[model.key]; return MIcon ? <MIcon size={18} color={model.color} /> : null })()}
                           </div>
                           <span className="px-2 py-0.5 rounded-full text-[10px] font-bold" style={{ color: rCfg.color, background: rCfg.bg }}>{rCfg.label}</span>
                         </div>
@@ -261,7 +269,7 @@ export default function MainPage() {
                       <div className="flex items-center justify-between mb-3">
                         <div className="flex items-center gap-2">
                           <span className="font-mono text-xl font-bold" style={{ color: p.color }}>{p.code}</span>
-                          {model && <span className="text-xs" title={model.name}>{model.emoji}</span>}
+                          {model && (() => { const MIcon = MODEL_ICONS[model.key]; return MIcon ? <MIcon size={16} color={model.color} /> : null })()}
                         </div>
                         <span className="px-2 py-0.5 rounded-full text-[10px] font-bold" style={{ color: rCfg.color, background: rCfg.bg }}>{rCfg.label}</span>
                       </div>
