@@ -13,18 +13,21 @@ export default function Navbar() {
   const [active, setActive] = useState('hero')
 
   useEffect(() => {
-    const observer = new IntersectionObserver(
-      (entries) => {
-        const visible = entries.filter(e => e.isIntersecting).sort((a, b) => b.intersectionRatio - a.intersectionRatio)
-        if (visible.length > 0) setActive(visible[0].target.id)
-      },
-      { rootMargin: '-80px 0px -60% 0px', threshold: [0, 0.25, 0.5] }
-    )
-    NAV_ITEMS.forEach(item => {
-      const el = document.getElementById(item.id)
-      if (el) observer.observe(el)
-    })
-    return () => observer.disconnect()
+    const onScroll = () => {
+      const offset = 80 // navbar height + margin
+      let current = 'hero'
+      for (const item of NAV_ITEMS) {
+        const el = document.getElementById(item.id)
+        if (el) {
+          const top = el.getBoundingClientRect().top
+          if (top <= offset) current = item.id
+        }
+      }
+      setActive(current)
+    }
+    window.addEventListener('scroll', onScroll, { passive: true })
+    onScroll()
+    return () => window.removeEventListener('scroll', onScroll)
   }, [])
 
   const scrollTo = (id: string) => {
