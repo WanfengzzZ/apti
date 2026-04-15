@@ -3,7 +3,7 @@ import { QUESTIONS } from '../data/questions'
 import { PERSONALITIES, RARIRY_CONFIG } from '../data/personalities'
 import {
   Zap, Brain, Target, Download, FileText, Eye, Copy, Check,
-  ExternalLink, Github, Heart, Bot
+  ExternalLink, Github, Heart, Bot, ChevronDown, LayoutGrid, Layers
 } from 'lucide-react'
 
 import { SplineScene } from '@/components/ui/splite'
@@ -23,10 +23,15 @@ const MODELS = [
 
 type TestTab = 'skill' | 'questions'
 
+type GalleryView = 'carousel' | 'grid'
+
 export default function MainPage() {
   const [testTab, setTestTab] = useState<TestTab>('skill')
   const [copied, setCopied] = useState<string | null>(null)
   const [expandedQ, setExpandedQ] = useState<number | null>(null)
+  const [galleryModel, setGalleryModel] = useState('all')
+  const [galleryView, setGalleryView] = useState<GalleryView>('carousel')
+  const [dropdownOpen, setDropdownOpen] = useState(false)
 
   const copyText = (text: string, key: string) => {
     navigator.clipboard.writeText(text)
@@ -115,61 +120,169 @@ export default function MainPage() {
       {/* ══════ GALLERY ══════ */}
       <section id="gallery" className="py-16 px-4 sm:px-8 border-t border-white/[0.04] scroll-mt-14">
         <div className="max-w-6xl mx-auto">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-b from-neutral-50 to-neutral-400">Agent 人格图鉴</h2>
-            <p className="text-neutral-500 text-sm mt-2">27 种 Agent 人格，按 5 大模型分类 · 拖拽或点击切换</p>
+          {/* Header: title + controls */}
+          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-10">
+            <div>
+              <h2 className="text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-b from-neutral-50 to-neutral-400">Agent 人格图鉴</h2>
+              <p className="text-neutral-500 text-sm mt-1">27 种 Agent 人格 · {galleryView === 'carousel' ? '拖拽或点击切换' : '平铺浏览'}</p>
+            </div>
+
+            <div className="flex items-center gap-3">
+              {/* Filter dropdown */}
+              <div className="relative">
+                <button
+                  onClick={() => setDropdownOpen(!dropdownOpen)}
+                  className="flex items-center gap-2 px-4 py-2 rounded-lg border border-neutral-800 bg-neutral-900/80 text-sm text-neutral-300 hover:border-neutral-700 transition-all min-w-[140px] justify-between"
+                >
+                  <span className="flex items-center gap-2">
+                    <span>{galleryModel === 'all' ? '🎭' : MODELS.find(m => m.key === galleryModel)?.emoji}</span>
+                    <span>{galleryModel === 'all' ? '全部' : MODELS.find(m => m.key === galleryModel)?.name}</span>
+                  </span>
+                  <ChevronDown size={14} className={`text-neutral-500 transition-transform ${dropdownOpen ? 'rotate-180' : ''}`} />
+                </button>
+                {dropdownOpen && (
+                  <>
+                    <div className="fixed inset-0 z-10" onClick={() => setDropdownOpen(false)} />
+                    <div className="absolute top-full left-0 mt-1 w-full bg-neutral-900 border border-neutral-800 rounded-lg shadow-xl z-20 overflow-hidden">
+                      <button
+                        onClick={() => { setGalleryModel('all'); setDropdownOpen(false) }}
+                        className={`w-full flex items-center gap-2 px-4 py-2.5 text-sm text-left transition-colors ${
+                          galleryModel === 'all' ? 'bg-white/5 text-white' : 'text-neutral-400 hover:bg-white/[0.03] hover:text-neutral-200'
+                        }`}
+                      >
+                        <span>🎭</span> 全部 <span className="ml-auto text-[10px] text-neutral-600">{PERSONALITIES.length}</span>
+                      </button>
+                      {MODELS.map(m => {
+                        const count = PERSONALITIES.filter(p => p.dominantModel === m.key).length
+                        return (
+                          <button
+                            key={m.key}
+                            onClick={() => { setGalleryModel(m.key); setDropdownOpen(false) }}
+                            className={`w-full flex items-center gap-2 px-4 py-2.5 text-sm text-left transition-colors ${
+                              galleryModel === m.key ? 'bg-white/5 text-white' : 'text-neutral-400 hover:bg-white/[0.03] hover:text-neutral-200'
+                            }`}
+                          >
+                            <span>{m.emoji}</span>
+                            <span style={{ color: galleryModel === m.key ? m.color : undefined }}>{m.name}</span>
+                            <span className="ml-auto text-[10px] text-neutral-600">{count}</span>
+                          </button>
+                        )
+                      })}
+                    </div>
+                  </>
+                )}
+              </div>
+
+              {/* View toggle */}
+              <div className="flex items-center rounded-lg border border-neutral-800 overflow-hidden">
+                <button
+                  onClick={() => setGalleryView('carousel')}
+                  className={`p-2 transition-colors ${galleryView === 'carousel' ? 'bg-white/10 text-white' : 'text-neutral-500 hover:text-neutral-300'}`}
+                  title="卡片轮播"
+                >
+                  <Layers size={16} />
+                </button>
+                <button
+                  onClick={() => setGalleryView('grid')}
+                  className={`p-2 transition-colors ${galleryView === 'grid' ? 'bg-white/10 text-white' : 'text-neutral-500 hover:text-neutral-300'}`}
+                  title="卡片平铺"
+                >
+                  <LayoutGrid size={16} />
+                </button>
+              </div>
+            </div>
           </div>
 
-          {MODELS.map(model => {
-            const modelPersonalities = PERSONALITIES.filter(p => p.dominantModel === model.key)
-            if (modelPersonalities.length === 0) return null
-            const stackItems = modelPersonalities.map(p => ({
-              id: p.code,
-              title: `${p.code} · ${p.name}`,
-              description: `"${p.tagline}" — ${p.description.slice(0, 60)}...`,
-              tag: RARIRY_CONFIG[p.rarity].label,
-              color: p.color,
-              rarity: p.rarity,
-            }))
-            return (
-              <div key={model.key} className="mb-16">
-                <div className="flex items-center gap-3 mb-2 justify-center">
-                  <span className="text-2xl">{model.emoji}</span>
-                  <h3 className="text-xl font-bold" style={{ color: model.color }}>{model.name}</h3>
-                  <span className="text-xs text-neutral-600">{model.desc}</span>
-                </div>
-                <CardStack
-                  items={stackItems}
-                  cardWidth={440}
-                  cardHeight={220}
-                  overlap={0.5}
-                  spreadDeg={36}
-                  autoAdvance
-                  intervalMs={3500}
-                  pauseOnHover
-                  showDots
-                  renderCard={(item, { active }) => {
-                    const p = PERSONALITIES.find(pp => pp.code === item.id)!
-                    const rCfg = RARIRY_CONFIG[p.rarity]
-                    return (
-                      <div className={`h-full w-full p-6 flex flex-col justify-between transition-all ${active ? 'bg-neutral-900' : 'bg-neutral-950'}`}
-                        style={{ borderTop: `2px solid ${p.color}` }}>
-                        <div>
-                          <div className="flex items-center justify-between mb-2">
-                            <span className="font-mono text-2xl font-bold" style={{ color: p.color }}>{p.code}</span>
-                            <span className="px-2 py-0.5 rounded-full text-[10px] font-bold" style={{ color: rCfg.color, background: rCfg.bg }}>{rCfg.label}</span>
+          {/* Carousel view */}
+          {galleryView === 'carousel' && (() => {
+            const modelsToShow = galleryModel === 'all' ? MODELS : MODELS.filter(m => m.key === galleryModel)
+            return modelsToShow.map(model => {
+              const modelPersonalities = PERSONALITIES.filter(p => p.dominantModel === model.key)
+              if (modelPersonalities.length === 0) return null
+              const stackItems = modelPersonalities.map(p => ({
+                id: p.code,
+                title: `${p.code} · ${p.name}`,
+                description: `"${p.tagline}" — ${p.description.slice(0, 60)}...`,
+                tag: RARIRY_CONFIG[p.rarity].label,
+                color: p.color,
+                rarity: p.rarity,
+              }))
+              return (
+                <div key={model.key} className="mb-14">
+                  <div className="flex items-center gap-3 mb-4 justify-center">
+                    <span className="text-xl">{model.emoji}</span>
+                    <h3 className="text-lg font-bold" style={{ color: model.color }}>{model.name}</h3>
+                    <span className="text-xs text-neutral-600">{model.desc}</span>
+                    <span className="text-[10px] text-neutral-700 ml-1">({modelPersonalities.length})</span>
+                  </div>
+                  <CardStack
+                    items={stackItems}
+                    cardWidth={440}
+                    cardHeight={220}
+                    overlap={0.5}
+                    spreadDeg={36}
+                    autoAdvance
+                    intervalMs={3500}
+                    pauseOnHover
+                    showDots
+                    renderCard={(item, { active }) => {
+                      const p = PERSONALITIES.find(pp => pp.code === item.id)!
+                      const rCfg = RARIRY_CONFIG[p.rarity]
+                      return (
+                        <div className={`h-full w-full p-6 flex flex-col justify-between transition-all ${active ? 'bg-neutral-900' : 'bg-neutral-950'}`}
+                          style={{ borderTop: `2px solid ${p.color}` }}>
+                          <div>
+                            <div className="flex items-center justify-between mb-2">
+                              <span className="font-mono text-2xl font-bold" style={{ color: p.color }}>{p.code}</span>
+                              <span className="px-2 py-0.5 rounded-full text-[10px] font-bold" style={{ color: rCfg.color, background: rCfg.bg }}>{rCfg.label}</span>
+                            </div>
+                            <h4 className="text-lg font-bold text-white mb-1">{p.name}</h4>
+                            <p className="text-sm text-neutral-400 italic">"{p.tagline}"</p>
                           </div>
-                          <h4 className="text-lg font-bold text-white mb-1">{p.name}</h4>
-                          <p className="text-sm text-neutral-400 italic">"{p.tagline}"</p>
+                          <p className="text-xs text-neutral-500 leading-relaxed line-clamp-3 mt-3">{p.description}</p>
                         </div>
-                        <p className="text-xs text-neutral-500 leading-relaxed line-clamp-3 mt-3">{p.description}</p>
+                      )
+                    }}
+                  />
+                </div>
+              )
+            })
+          })()}
+
+          {/* Grid view */}
+          {galleryView === 'grid' && (() => {
+            const filtered = galleryModel === 'all'
+              ? PERSONALITIES
+              : PERSONALITIES.filter(p => p.dominantModel === galleryModel)
+            return (
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                {filtered.map(p => {
+                  const rCfg = RARIRY_CONFIG[p.rarity]
+                  const model = MODELS.find(m => m.key === p.dominantModel)
+                  return (
+                    <div key={p.code} className="relative p-5 rounded-xl bg-neutral-900/60 border border-neutral-800/50 hover:border-neutral-700/60 transition-all group overflow-hidden">
+                      <div className="absolute top-0 left-0 right-0 h-0.5" style={{ background: `linear-gradient(90deg, ${p.color}, transparent)` }} />
+                      <div className="flex items-center justify-between mb-3">
+                        <div className="flex items-center gap-2">
+                          <span className="font-mono text-xl font-bold" style={{ color: p.color }}>{p.code}</span>
+                          {model && <span className="text-xs" title={model.name}>{model.emoji}</span>}
+                        </div>
+                        <span className="px-2 py-0.5 rounded-full text-[10px] font-bold" style={{ color: rCfg.color, background: rCfg.bg }}>{rCfg.label}</span>
                       </div>
-                    )
-                  }}
-                />
+                      <h4 className="text-base font-bold text-white mb-1">{p.name}</h4>
+                      <p className="text-xs text-neutral-400 italic mb-3">"{p.tagline}"</p>
+                      <p className="text-xs text-neutral-500 leading-relaxed line-clamp-3">{p.description}</p>
+                    </div>
+                  )
+                })}
               </div>
             )
-          })}
+          })()}
+
+          {/* Empty state */}
+          {galleryModel !== 'all' && PERSONALITIES.filter(p => p.dominantModel === galleryModel).length === 0 && (
+            <div className="text-center py-16 text-neutral-600">该分类暂无人格类型</div>
+          )}
         </div>
       </section>
 
