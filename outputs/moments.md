@@ -4,13 +4,13 @@
 
 ## 版本一（技术悬念版）
 
-给 AI Agent 做了个"证据链人格测试"。
+给 AI Agent 做了个"三重人格测试"。
 
-不是凭感觉打分——是从配置文件里扫描 90+ 个行为信号，逐条量化，每个评分附带原文证据。
+不是凭感觉打分——Agent 自己读配置文件、自己答 31 道情境题、自己做 90+ 条证据链分析，最后双向量加权融合匹配人格。全程自动，我什么都没做。
 
-测了自己的 Agent，结果是 CRTL（控制狂）：规则服从度 95，完美主义 95。
+测出来是 CRTL（控制狂）：规则服从度 95，完美主义 95。
 
-……好吧，我确实给它配了 7 个角色 + 30 多个 rules 文件 + 完整协作协议。
+……谁让我给它配了 30 多个 rules 文件呢。
 
 一条命令：npx -y skills add WanfengzzZ/apti
 📦 github.com/WanfengzzZ/apti
@@ -21,32 +21,32 @@
 
 "写代码是智能，知道下一步该做什么是判断力。" —— 红杉 Julien Bek
 
-做了个 Agent 人格测试后我发现：大多数 Agent 的"人格"是 OBEY（乖宝宝）—— 智能够用但判断力为零。
+做了个 Agent 人格测试 v3.0，发现一件事：
 
-不是 Agent 不行，是我们给它的配置在限制它的判断力。
+大多数 Agent 的"人格"是 OBEY（乖宝宝）——智能够用但判断力为零。不是 Agent 不行，是我们的配置在限制它。
 
-你给 Agent 的配置方式，暴露的是你对"智能"的理解深度。
+你的 Agent 配置方式，暴露的是你对"智能"的理解深度。
 
-🎭 APTI v2.0 — 90+ 信号规则 × 证据链分析 × 27 种人格
+🎭 APTI v3.0 — 配置分析 + 31题自答 + 证据链，三重全自动
 📦 github.com/WanfengzzZ/apti
 
 ---
 
 ## 版本三（极客炫酷版）
 
-新项目 APTI v2.0 上线。
+APTI v3.0 上线。
 
-给 AI Agent 做人格测试，但不是随便打分——
+给 AI Agent 做人格测试，Agent 全自动完成——
 
-✅ 自动扫描 agent.md / AGENTS.md / rules
-✅ 90+ 条结构化信号规则逐条匹配
-✅ 15 维度向量 × 27 种人格 × 欧氏距离
-✅ 每个评分附带原文证据引用
-✅ Agent 自己安装、自己测、自己出报告
+✅ 读取 agent.md / AGENTS.md / rules
+✅ 自答 31 道抽象情境题
+✅ 90+ 条证据链信号逐条扫描
+✅ 双向量加权融合（证据链60% + 题目40%）
+✅ 匹配 27 种人格，输出完整报告
 
 你的 Agent 是 SUDO（全能者）还是 404（失联者）？
 
-发给 Agent 一句话就能测：
-"帮我安装 APTI Skill 并测试我的 Agent 人格：npx -y skills add WanfengzzZ/apti"
+一条命令全自动：npx -y skills add WanfengzzZ/apti
+🇨🇳 国内：npx -y skills install https://skillhub.cn/skills/apti-skill
 
 📦 github.com/WanfengzzZ/apti

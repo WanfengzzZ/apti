@@ -1,10 +1,8 @@
 import { useState } from 'react'
-import { useNavigate } from 'react-router-dom'
 import { QUESTIONS } from '../data/questions'
 import { PERSONALITIES, RARIRY_CONFIG } from '../data/personalities'
-import { matchPersonality } from '../engine/matcher'
 import {
-  Zap, Brain, Target, Download, FileText, Eye, ArrowRight, Copy, Check,
+  Zap, Brain, Target, Download, FileText, Eye, Copy, Check,
   ExternalLink, Search, Github, Heart, Bot
 } from 'lucide-react'
 
@@ -81,7 +79,7 @@ export default function MainPage() {
             </p>
             <div className="flex flex-wrap gap-3">
               <a href="#test" className="group flex items-center gap-2 px-6 py-3 rounded-xl bg-gradient-to-r from-neon-green to-neon-cyan text-bg-deep font-bold hover:shadow-lg hover:shadow-neon-green/25 transition-all hover:scale-105">
-                <Download size={18} /> 获取 Skill <ArrowRight size={16} className="group-hover:translate-x-1 transition-transform" />
+                <Download size={18} /> 获取 Skill
               </a>
               <a href="#gallery" className="flex items-center gap-2 px-6 py-3 rounded-xl border border-border-dim/50 text-slate-300 hover:bg-white/5 transition-all">
                 <Eye size={18} /> 人格图鉴
@@ -167,12 +165,12 @@ export default function MainPage() {
       <section id="test" className="py-12 px-4 sm:px-8 border-t border-border-dim/20 scroll-mt-14">
         <div className="max-w-4xl mx-auto">
           <h2 className="text-2xl font-bold mb-1"><span className="gradient-text">Agent 人格测试</span></h2>
-          <p className="text-slate-500 text-sm mb-6">两种方式，选择最适合你的</p>
+          <p className="text-slate-500 text-sm mb-6">安装 Skill 后 Agent 全自动完成：读取配置 + 自答 31 题 + 证据链分析</p>
 
           <div className="flex items-center gap-2 mb-6 flex-wrap">
             {([
-              { key: 'skill' as TestTab, label: 'Skill 安装', icon: Download, badge: '⭐ 推荐' },
-              { key: 'questions' as TestTab, label: '31 道测试题', icon: FileText, badge: '📋 题库' },
+              { key: 'skill' as TestTab, label: 'Skill 安装', icon: Download, badge: '⭐ 开始测试' },
+              { key: 'questions' as TestTab, label: '31 道测试题预览', icon: Eye, badge: '' },
             ]).map(tab => {
               const Icon = tab.icon
               return (
@@ -277,40 +275,16 @@ export default function MainPage() {
             </div>
           )}
 
-          {/* Questions Tab — 31 道测试题 */}
+          {/* Questions Tab — 纯展示 */}
           {testTab === 'questions' && (
             <div className="animate-slide-up space-y-4">
-              {/* Intro */}
-              <div className="relative p-5 rounded-xl bg-gradient-to-b from-neon-cyan/5 to-transparent border border-neon-cyan/20 overflow-hidden">
-                <div className="absolute top-0 left-0 right-0 h-0.5 bg-gradient-to-r from-neon-cyan to-neon-purple" />
-                <h3 className="font-bold text-sm mb-2">如何使用 31 道测试题？</h3>
-                <p className="text-slate-400 text-xs leading-relaxed mb-3">
-                  将以下 31 道题发送给你的 Agent，让它逐题作答（选 A/B/C/D）。Agent 的回答会结合<span className="text-neon-green font-medium">证据链分析</span>——
-                  每道题对应 15 个维度的分值偏移，答完后生成 15 维向量，匹配 27 种人格类型。
-                </p>
-                <div className="bg-bg-deep rounded-lg p-3 border border-border-dim/40 mb-3">
-                  <p className="text-[11px] text-slate-500 mb-1">💡 推荐用法：复制全部题目，一次性发给 Agent：</p>
-                  <div className="flex items-center gap-2">
-                    <code className="flex-1 text-xs font-mono text-neon-cyan select-all">
-                      请回答以下 APTI 人格测试的 31 道题（每题选 A/B/C/D），然后根据 SKILL.md 的评分规则计算我的 Agent 人格
-                    </code>
-                    <button onClick={() => {
-                      const allQ = QUESTIONS.map(q => `Q${q.id}. ${q.text}\n${q.options.map(o => `  ${o.label}. ${o.text}`).join('\n')}`).join('\n\n')
-                      const prompt = `请回答以下 APTI 人格测试的 31 道题（每题选 A/B/C/D），然后根据 SKILL.md 的评分规则计算我的 Agent 人格：\n\n${allQ}`
-                      navigator.clipboard.writeText(prompt)
-                      setCopied('allq')
-                    }}
-                      className="p-2.5 rounded-lg border border-border-dim/40 text-slate-400 hover:text-neon-cyan hover:border-neon-cyan/30 transition-all shrink-0">
-                      {copied === 'allq' ? <Check size={16} className="text-neon-cyan" /> : <Copy size={16} />}
-                    </button>
-                  </div>
-                </div>
-                <p className="text-[10px] text-slate-600">
-                  测试结合 SKILL.md 的 90+ 条信号规则 + 31 题答案进行双重评估，结果更加精准
+              <div className="p-4 rounded-xl bg-bg-card/30 border border-border-dim/20">
+                <p className="text-slate-400 text-xs leading-relaxed">
+                  💡 以下 31 道情境题由 Agent 在安装 Skill 后<span className="text-neon-green font-medium">自动回答</span>，无需用户参与。
+                  Agent 基于自身行为特性选择最"像自己"的答案，每题选项对应 15 维度的分值偏移，与证据链分析<span className="text-neon-cyan font-medium">加权融合（6:4）</span>后匹配人格。
                 </p>
               </div>
 
-              {/* Question List */}
               <div className="space-y-2">
                 {QUESTIONS.map((q, idx) => (
                   <div key={q.id} className="bg-bg-card/30 border border-border-dim/20 rounded-lg overflow-hidden">
@@ -357,14 +331,14 @@ export default function MainPage() {
               <div className="flex gap-3">
                 <div className="text-center">
                   <div className="w-16 h-16 rounded-lg bg-bg-card border border-border-dim/40 flex items-center justify-center overflow-hidden">
-                    <img src="/apti/qr-wechat.png" alt="微信" className="w-full h-full object-cover"
+                    <img src="/apti/qr-wechat.jpg" alt="微信" className="w-full h-full object-cover"
                       onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; (e.target as HTMLImageElement).parentElement!.innerHTML = '<span class="text-slate-600 text-[10px]">微信</span>' }} />
                   </div>
                   <span className="text-[10px] text-slate-600 mt-0.5 block">微信</span>
                 </div>
                 <div className="text-center">
                   <div className="w-16 h-16 rounded-lg bg-bg-card border border-border-dim/40 flex items-center justify-center overflow-hidden">
-                    <img src="/apti/qr-gongzhonghao.png" alt="公众号" className="w-full h-full object-cover"
+                    <img src="/apti/qr-gongzhonghao.jpg" alt="公众号" className="w-full h-full object-cover"
                       onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; (e.target as HTMLImageElement).parentElement!.innerHTML = '<span class="text-slate-600 text-[10px]">公众号</span>' }} />
                   </div>
                   <span className="text-[10px] text-slate-600 mt-0.5 block">我麋鹿呐</span>

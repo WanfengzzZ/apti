@@ -37,7 +37,7 @@ export default function Footer() {
               <div className="text-center">
                 <div className="w-20 h-20 rounded-lg bg-bg-card border border-border-dim/50 flex items-center justify-center overflow-hidden">
                   <img
-                    src="/apti/qr-wechat.png"
+                    src="/apti/qr-wechat.jpg"
                     alt="微信二维码"
                     className="w-full h-full object-cover"
                     onError={(e) => {
@@ -52,7 +52,7 @@ export default function Footer() {
               <div className="text-center">
                 <div className="w-20 h-20 rounded-lg bg-bg-card border border-border-dim/50 flex items-center justify-center overflow-hidden">
                   <img
-                    src="/apti/qr-gongzhonghao.png"
+                    src="/apti/qr-gongzhonghao.jpg"
                     alt="公众号二维码"
                     className="w-full h-full object-cover"
                     onError={(e) => {
