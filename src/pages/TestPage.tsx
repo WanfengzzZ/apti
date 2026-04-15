@@ -134,7 +134,7 @@ export default function TestPage() {
                     </button>
                   </div>
                   <p className="text-slate-600 text-xs mt-2">
-                    或访问 <a href="https://skillhub.cn" target="_blank" rel="noopener noreferrer" className="text-neon-cyan hover:underline">SkillHub.cn</a> 搜索「apti」一键安装
+                    或访问 <a href="https://skillhub.cn/skills/apti-skill" target="_blank" rel="noopener noreferrer" className="text-neon-cyan hover:underline">SkillHub.cn</a> 搜索「apti」一键安装
                   </p>
                 </div>
 
@@ -167,7 +167,7 @@ export default function TestPage() {
                 {/* SkillHub Link */}
                 <div className="pt-4 border-t border-border-dim/30">
                   <a
-                    href="https://skillhub.cn"
+                    href="https://skillhub.cn/skills/apti-skill"
                     target="_blank"
                     rel="noopener noreferrer"
                     className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-gradient-to-r from-neon-green to-neon-cyan text-bg-deep font-bold hover:shadow-lg hover:shadow-neon-green/20 transition-all"

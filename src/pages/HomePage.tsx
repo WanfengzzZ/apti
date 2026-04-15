@@ -143,7 +143,7 @@ export default function HomePage() {
                 <code className="block bg-bg-deep rounded-lg p-3 text-xs font-mono text-neon-green border border-border-dim/50">
                   npx -y skills add WanfengzzZ/apti
                 </code>
-                <p className="text-slate-600 text-xs">或访问 <a href="https://skillhub.cn" target="_blank" rel="noopener noreferrer" className="text-neon-cyan hover:underline">skillhub.cn</a> 搜索 apti</p>
+                <p className="text-slate-600 text-xs">或访问 <a href="https://skillhub.cn/skills/apti-skill" target="_blank" rel="noopener noreferrer" className="text-neon-cyan hover:underline">skillhub.cn</a> 搜索 apti</p>
               </div>
             </div>
 

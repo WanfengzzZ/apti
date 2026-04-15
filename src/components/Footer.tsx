@@ -23,7 +23,7 @@ export default function Footer() {
               <a href={GITHUB_URL} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 text-slate-500 hover:text-neon-green transition-colors">
                 <Github size={14} /> GitHub 开源
               </a>
-              <a href="https://skillhub.cn" target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 text-slate-500 hover:text-neon-cyan transition-colors">
+              <a href="https://skillhub.cn/skills/apti-skill" target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 text-slate-500 hover:text-neon-cyan transition-colors">
                 📦 SkillHub
               </a>
             </div>

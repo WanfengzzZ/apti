@@ -312,15 +312,16 @@ export default function MainPage() {
           {/* Skill Tab */}
           {testTab === 'skill' && (
             <div className="space-y-4 animate-slide-up">
+              {/* 方式一：NPX 命令安装 */}
               <div className="relative p-5 rounded-xl bg-gradient-to-b from-neon-green/5 to-transparent border border-neon-green/20 overflow-hidden">
                 <div className="absolute top-0 left-0 right-0 h-0.5 bg-gradient-to-r from-neon-green to-neon-cyan" />
                 <div className="flex items-center gap-2 mb-2">
                   <Bot size={16} className="text-neon-green" />
-                  <h3 className="font-bold text-sm text-neon-green">方式一：让 Agent 自己安装</h3>
-                  <span className="text-[9px] font-bold text-neon-green bg-neon-green/10 px-1.5 py-0.5 rounded ml-1">推荐</span>
+                  <h3 className="font-bold text-sm text-neon-green">方式一：NPX 命令安装</h3>
+                  <span className="text-[9px] font-bold text-neon-green bg-neon-green/10 px-1.5 py-0.5 rounded ml-1">⭐ 推荐</span>
                 </div>
-                <p className="text-slate-400 text-xs mb-3">直接告诉你的 Agent 运行以下指令：</p>
-                <div className="flex items-center gap-2">
+                <p className="text-slate-400 text-xs mb-3">让 Agent 运行以下命令自动安装，支持 45+ 种 Agent 环境：</p>
+                <div className="flex items-center gap-2 mb-2">
                   <code className="flex-1 bg-bg-deep rounded-lg p-3 text-xs font-mono text-neon-green border border-border-dim/40 select-all">
                     npx -y skills add WanfengzzZ/apti
                   </code>
@@ -329,38 +330,59 @@ export default function MainPage() {
                     {copied === 'a' ? <Check size={16} className="text-neon-green" /> : <Copy size={16} />}
                   </button>
                 </div>
+                <p className="text-slate-600 text-[10px]">需要 Node.js 环境 · 支持 Claude Code / Cursor / Codex / Windsurf 等</p>
               </div>
 
-              <div className="p-5 rounded-xl bg-bg-card/40 border border-border-dim/30">
+              {/* 方式二：SkillHub 安装（国内推荐） */}
+              <div className="relative p-5 rounded-xl bg-gradient-to-b from-neon-purple/5 to-transparent border border-neon-purple/20 overflow-hidden">
+                <div className="absolute top-0 left-0 right-0 h-0.5 bg-gradient-to-r from-neon-purple to-neon-cyan" />
                 <div className="flex items-center gap-2 mb-2">
-                  <Download size={16} className="text-neon-cyan" />
-                  <h3 className="font-bold text-sm">方式二：手动下载 SKILL.md</h3>
+                  <Download size={16} className="text-neon-purple" />
+                  <h3 className="font-bold text-sm text-neon-purple">方式二：SkillHub 安装</h3>
+                  <span className="text-[9px] font-bold text-neon-purple bg-neon-purple/10 px-1.5 py-0.5 rounded ml-1">🇨🇳 国内推荐</span>
                 </div>
-                <p className="text-slate-400 text-xs mb-3">从 GitHub 下载 SKILL.md 放入项目根目录，然后调用：</p>
-                <div className="flex items-center gap-2 mb-2">
-                  <code className="flex-1 bg-bg-deep rounded-lg p-3 text-xs font-mono text-neon-cyan border border-border-dim/40">use_skill("apti")</code>
-                  <button onClick={() => copyText('use_skill("apti")', 'b')}
-                    className="p-2.5 rounded-lg border border-border-dim/40 text-slate-400 hover:text-neon-cyan hover:border-neon-cyan/30 transition-all shrink-0">
-                    {copied === 'b' ? <Check size={16} className="text-neon-cyan" /> : <Copy size={16} />}
+                <p className="text-slate-400 text-xs mb-3">无需访问 GitHub，直接从 SkillHub 国内源安装：</p>
+                <div className="flex items-center gap-2 mb-3">
+                  <code className="flex-1 bg-bg-deep rounded-lg p-3 text-xs font-mono text-neon-purple border border-border-dim/40 select-all">
+                    npx -y skills install https://skillhub.cn/skills/apti-skill
+                  </code>
+                  <button onClick={() => copyText('npx -y skills install https://skillhub.cn/skills/apti-skill', 'b')}
+                    className="p-2.5 rounded-lg border border-border-dim/40 text-slate-400 hover:text-neon-purple hover:border-neon-purple/30 transition-all shrink-0">
+                    {copied === 'b' ? <Check size={16} className="text-neon-purple" /> : <Copy size={16} />}
                   </button>
                 </div>
-                <a href={`${GITHUB_URL}/blob/main/SKILL.md`} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1 text-xs text-neon-cyan hover:underline">
-                  <Github size={12} /> 从 GitHub 下载 SKILL.md <ExternalLink size={10} />
+                <a href="https://skillhub.cn/skills/apti-skill" target="_blank" rel="noopener noreferrer"
+                  className="inline-flex items-center gap-2 px-5 py-2.5 rounded-lg bg-gradient-to-r from-neon-purple/80 to-neon-cyan/80 text-white font-bold text-sm hover:shadow-lg transition-all">
+                  <Download size={14} /> 在 SkillHub 查看 <ExternalLink size={12} />
                 </a>
               </div>
 
+              {/* 方式三：手动下载 SKILL.md */}
               <div className="p-5 rounded-xl bg-bg-card/40 border border-border-dim/30">
                 <div className="flex items-center gap-2 mb-2">
-                  <ExternalLink size={16} className="text-neon-purple" />
-                  <h3 className="font-bold text-sm">方式三：从 SkillHub 安装</h3>
+                  <FileText size={16} className="text-neon-cyan" />
+                  <h3 className="font-bold text-sm">方式三：手动下载 SKILL.md</h3>
                 </div>
-                <p className="text-slate-400 text-xs mb-3">访问 SkillHub 搜索「apti」，一键安装：</p>
-                <a href="https://skillhub.cn" target="_blank" rel="noopener noreferrer"
-                  className="inline-flex items-center gap-2 px-5 py-2.5 rounded-lg bg-gradient-to-r from-neon-purple/80 to-neon-cyan/80 text-white font-bold text-sm hover:shadow-lg transition-all">
-                  <Download size={14} /> 在 SkillHub 安装 <ExternalLink size={12} />
-                </a>
+                <p className="text-slate-400 text-xs mb-3">下载 SKILL.md 放入项目根目录，然后在 Agent 中调用：</p>
+                <div className="flex items-center gap-2 mb-3">
+                  <code className="flex-1 bg-bg-deep rounded-lg p-3 text-xs font-mono text-neon-cyan border border-border-dim/40">use_skill("apti")</code>
+                  <button onClick={() => copyText('use_skill("apti")', 'c')}
+                    className="p-2.5 rounded-lg border border-border-dim/40 text-slate-400 hover:text-neon-cyan hover:border-neon-cyan/30 transition-all shrink-0">
+                    {copied === 'c' ? <Check size={16} className="text-neon-cyan" /> : <Copy size={16} />}
+                  </button>
+                </div>
+                <div className="flex items-center gap-3 text-xs">
+                  <a href="https://skillhub.cn/skills/apti-skill" target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1 text-neon-purple hover:underline">
+                    📦 从 SkillHub 下载 <ExternalLink size={10} />
+                  </a>
+                  <span className="text-slate-600">|</span>
+                  <a href={`${GITHUB_URL}/blob/main/SKILL.md`} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1 text-neon-cyan hover:underline">
+                    <Github size={12} /> 从 GitHub 下载 <ExternalLink size={10} />
+                  </a>
+                </div>
               </div>
 
+              {/* Terminal preview */}
               <div className="rounded-xl bg-bg-card/40 border border-border-dim/30 overflow-hidden">
                 <div className="flex items-center gap-1.5 px-3 py-2 border-b border-border-dim/30 bg-bg-deep/50">
                   <div className="w-2.5 h-2.5 rounded-full bg-red-500/50" /><div className="w-2.5 h-2.5 rounded-full bg-yellow-500/50" /><div className="w-2.5 h-2.5 rounded-full bg-green-500/50" />
@@ -368,9 +390,10 @@ export default function MainPage() {
                 </div>
                 <div className="p-4 font-mono text-[11px] space-y-0.5">
                   <div className="text-slate-600">[APTI] Reading AGENTS.md...</div>
-                  <div className="text-slate-600">[APTI] Evaluating 15 dimensions...</div>
+                  <div className="text-slate-600">[APTI] Evaluating 15 dimensions (90+ signals)...</div>
+                  <div className="text-slate-600">[APTI] Extracting evidence chains...</div>
                   <div className="text-neon-green">[APTI] ✓ Result: SUDO (全能者) — 87% match</div>
-                  <div className="text-neon-green">[APTI] ✓ Report generated ✨</div>
+                  <div className="text-neon-green">[APTI] ✓ Report generated with evidence citations ✨</div>
                 </div>
               </div>
             </div>
@@ -441,7 +464,7 @@ export default function MainPage() {
               <h4 className="text-xs font-bold text-slate-400 mb-2">链接</h4>
               <div className="space-y-1.5 text-xs">
                 <a href={GITHUB_URL} target="_blank" rel="noopener noreferrer" className="flex items-center gap-1.5 text-slate-500 hover:text-neon-green transition-colors"><Github size={12} /> GitHub</a>
-                <a href="https://skillhub.cn" target="_blank" rel="noopener noreferrer" className="flex items-center gap-1.5 text-slate-500 hover:text-neon-cyan transition-colors">📦 SkillHub</a>
+                <a href="https://skillhub.cn/skills/apti-skill" target="_blank" rel="noopener noreferrer" className="flex items-center gap-1.5 text-slate-500 hover:text-neon-cyan transition-colors">📦 SkillHub</a>
               </div>
             </div>
             <div>
