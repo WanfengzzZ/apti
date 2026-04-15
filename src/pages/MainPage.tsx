@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { motion } from 'framer-motion'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@radix-ui/react-tabs"
 import { QUESTIONS } from '../data/questions'
 import { PERSONALITIES, RARIRY_CONFIG } from '../data/personalities'
@@ -98,17 +99,30 @@ export default function MainPage() {
         </Card>
 
         {/* Models row below hero */}
-        <div className="max-w-6xl mx-auto mt-6 grid grid-cols-2 sm:grid-cols-5 gap-3">
+        <div className="max-w-6xl mx-auto mt-6 grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4">
           {MODELS.map(m => {
             const Icon = m.icon
             return (
-              <div key={m.name} className="flex items-center gap-2.5 p-3 rounded-lg bg-neutral-900/50 border border-neutral-800/50">
-                <Icon size={24} color={m.color} />
-                <div>
-                  <div className="text-xs font-bold" style={{ color: m.color }}>{m.name}</div>
-                  <div className="text-[10px] text-neutral-500">{m.desc}</div>
+              <motion.div
+                key={m.name}
+                className="group relative flex flex-col justify-between overflow-hidden rounded-2xl border border-neutral-800/60 bg-neutral-900/70 p-5 h-40 cursor-default"
+                initial={{ scale: 1, y: 0 }}
+                whileHover={{ scale: 1.03, y: -4, transition: { type: 'spring', stiffness: 300, damping: 15 } }}
+              >
+                {/* Text */}
+                <div className="z-10">
+                  <h3 className="text-sm font-bold text-white mb-1">{m.name}</h3>
+                  <p className="text-[11px] text-neutral-400 leading-relaxed">{m.desc}</p>
                 </div>
-              </div>
+                {/* Decorative icon — bottom right */}
+                <div className="absolute -bottom-3 -right-3 opacity-[0.08] group-hover:opacity-[0.15] transition-opacity duration-300">
+                  <Icon size={90} color={m.color} />
+                </div>
+                {/* Small icon — top left accent */}
+                <div className="absolute top-4 right-4 opacity-60">
+                  <Icon size={18} color={m.color} />
+                </div>
+              </motion.div>
             )
           })}
         </div>
