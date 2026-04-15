@@ -193,60 +193,56 @@ export default function MainPage() {
             </div>
           </div>
 
-          {/* Carousel view */}
+          {/* Carousel view — single stack */}
           {galleryView === 'carousel' && (() => {
-            const modelsToShow = galleryModel === 'all' ? MODELS : MODELS.filter(m => m.key === galleryModel)
-            return modelsToShow.map(model => {
-              const modelPersonalities = PERSONALITIES.filter(p => p.dominantModel === model.key)
-              if (modelPersonalities.length === 0) return null
-              const stackItems = modelPersonalities.map(p => ({
-                id: p.code,
-                title: `${p.code} · ${p.name}`,
-                description: `"${p.tagline}" — ${p.description.slice(0, 60)}...`,
-                tag: RARIRY_CONFIG[p.rarity].label,
-                color: p.color,
-                rarity: p.rarity,
-              }))
-              return (
-                <div key={model.key} className="mb-14">
-                  <div className="flex items-center gap-3 mb-4 justify-center">
-                    <span className="text-xl">{model.emoji}</span>
-                    <h3 className="text-lg font-bold" style={{ color: model.color }}>{model.name}</h3>
-                    <span className="text-xs text-neutral-600">{model.desc}</span>
-                    <span className="text-[10px] text-neutral-700 ml-1">({modelPersonalities.length})</span>
-                  </div>
-                  <CardStack
-                    items={stackItems}
-                    cardWidth={440}
-                    cardHeight={220}
-                    overlap={0.5}
-                    spreadDeg={36}
-                    autoAdvance
-                    intervalMs={3500}
-                    pauseOnHover
-                    showDots
-                    renderCard={(item, { active }) => {
-                      const p = PERSONALITIES.find(pp => pp.code === item.id)!
-                      const rCfg = RARIRY_CONFIG[p.rarity]
-                      return (
-                        <div className={`h-full w-full p-6 flex flex-col justify-between transition-all ${active ? 'bg-neutral-900' : 'bg-neutral-950'}`}
-                          style={{ borderTop: `2px solid ${p.color}` }}>
-                          <div>
-                            <div className="flex items-center justify-between mb-2">
-                              <span className="font-mono text-2xl font-bold" style={{ color: p.color }}>{p.code}</span>
-                              <span className="px-2 py-0.5 rounded-full text-[10px] font-bold" style={{ color: rCfg.color, background: rCfg.bg }}>{rCfg.label}</span>
-                            </div>
-                            <h4 className="text-lg font-bold text-white mb-1">{p.name}</h4>
-                            <p className="text-sm text-neutral-400 italic">"{p.tagline}"</p>
+            const filtered = galleryModel === 'all'
+              ? PERSONALITIES
+              : PERSONALITIES.filter(p => p.dominantModel === galleryModel)
+            if (filtered.length === 0) return null
+            const stackItems = filtered.map(p => ({
+              id: p.code,
+              title: `${p.code} · ${p.name}`,
+              description: `"${p.tagline}" — ${p.description.slice(0, 60)}...`,
+              tag: RARIRY_CONFIG[p.rarity].label,
+              color: p.color,
+              rarity: p.rarity,
+            }))
+            return (
+              <CardStack
+                key={galleryModel}
+                items={stackItems}
+                cardWidth={460}
+                cardHeight={240}
+                overlap={0.5}
+                spreadDeg={36}
+                autoAdvance
+                intervalMs={3000}
+                pauseOnHover
+                showDots
+                renderCard={(item, { active }) => {
+                  const p = PERSONALITIES.find(pp => pp.code === item.id)!
+                  const rCfg = RARIRY_CONFIG[p.rarity]
+                  const model = MODELS.find(m => m.key === p.dominantModel)
+                  return (
+                    <div className={`h-full w-full p-6 flex flex-col justify-between transition-all ${active ? 'bg-neutral-900' : 'bg-neutral-950'}`}
+                      style={{ borderTop: `2px solid ${p.color}` }}>
+                      <div>
+                        <div className="flex items-center justify-between mb-2">
+                          <div className="flex items-center gap-2">
+                            <span className="font-mono text-2xl font-bold" style={{ color: p.color }}>{p.code}</span>
+                            {model && <span className="text-sm" title={model.name}>{model.emoji}</span>}
                           </div>
-                          <p className="text-xs text-neutral-500 leading-relaxed line-clamp-3 mt-3">{p.description}</p>
+                          <span className="px-2 py-0.5 rounded-full text-[10px] font-bold" style={{ color: rCfg.color, background: rCfg.bg }}>{rCfg.label}</span>
                         </div>
-                      )
-                    }}
-                  />
-                </div>
-              )
-            })
+                        <h4 className="text-lg font-bold text-white mb-1">{p.name}</h4>
+                        <p className="text-sm text-neutral-400 italic">"{p.tagline}"</p>
+                      </div>
+                      <p className="text-xs text-neutral-500 leading-relaxed line-clamp-3 mt-3">{p.description}</p>
+                    </div>
+                  )
+                }}
+              />
+            )
           })()}
 
           {/* Grid view */}
